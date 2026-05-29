@@ -4,6 +4,17 @@ Stripe subscription billing for Laravel Afterburner Jetstream. Each entity is th
 
 ## Installation
 
+### Local Development Setup
+
+For local development, add the package as a path repository:
+
+```bash
+composer config repositories.afterburner-subscriptions path ../afterburner-subscriptions
+composer require laravel-afterburner/subscriptions:@dev
+```
+
+### Quick Install
+
 ```bash
 composer require laravel-afterburner/subscriptions
 php artisan afterburner:subscriptions:install
@@ -68,3 +79,7 @@ Register each add-on's slug in the host `config/afterburner-subscriptions.php` â
 **Trial behavior:** With `trial_full_access` enabled (default), entities on a generic trial bypass entitlement checks so they can explore all features. After trial, access is enforced by the subscribed plan.
 
 **App-wide block:** `EnsureSubscriptionActive` (host registers) blocks the entire app when billing is inactive. Entitlement checks are per-feature and complementary.
+
+## License
+
+MIT License

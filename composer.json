@@ -1,0 +1,47 @@
+{
+    "name": "laravel-afterburner/subscriptions",
+    "description": "Stripe subscription billing for Afterburner applications",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "laravel/cashier": "^15.0",
+        "laravel/framework": "^11.0",
+        "laravel-afterburner/jetstream": "^1.0|dev-master",
+        "livewire/livewire": "^3.5"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.13",
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Afterburner\\Subscriptions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Afterburner\\Subscriptions\\Tests\\": "tests/",
+            "App\\Models\\": "tests/Fixtures/Models/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "pint": "pint"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Afterburner\\Subscriptions\\Providers\\SubscriptionsServiceProvider"
+            ],
+            "commands": [
+                "Afterburner\\Subscriptions\\Console\\Commands\\InstallCommand",
+                "Afterburner\\Subscriptions\\Console\\Commands\\NotifyTrialEndingCommand"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

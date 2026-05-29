@@ -31,6 +31,7 @@ use Afterburner\Subscriptions\Models\SubscriptionPlan;
 use Afterburner\Subscriptions\Models\SubscriptionPromotionCode;
 use Afterburner\Subscriptions\Policies\SubscriptionPlanPolicy;
 use Afterburner\Subscriptions\Policies\SubscriptionPromotionPolicy;
+use Afterburner\Playbook\Support\Playbook;
 use App\Models\Team;
 use App\Support\SystemAdminNavigation;
 use App\Support\TeamNavigation;
@@ -89,6 +90,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
         $this->registerGates();
         $this->registerMiddleware();
         $this->registerNavigation();
+        $this->registerPlaybook();
         $this->registerEventListeners();
         $this->registerPackageSeeder();
         $this->registerSchedule();
@@ -187,6 +189,23 @@ class SubscriptionsServiceProvider extends ServiceProvider
                 ]);
             }
         }
+    }
+
+    protected function registerPlaybook(): void
+    {
+        if (! class_exists(Playbook::class)) {
+            return;
+        }
+
+        Playbook::register([
+            'key' => 'subscriptions',
+            'label' => 'Subscriptions',
+            'order' => 40,
+            'path' => __DIR__.'/../../playbook',
+            'enabled' => fn () => config('afterburner-subscriptions.enabled', true),
+            'permission' => fn ($user) => $user?->currentTeam
+                && $user->can('viewBilling', $user->currentTeam),
+        ]);
     }
 
     protected function registerEventListeners(): void

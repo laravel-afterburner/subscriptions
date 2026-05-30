@@ -20,7 +20,7 @@ class Show extends Component
     {
         $this->authorize('update', $this->promotion);
 
-        $this->redirectRoute('admin.subscription-promotions.edit', $this->promotion);
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.edit', $this->promotion);
     }
 
     public function render()

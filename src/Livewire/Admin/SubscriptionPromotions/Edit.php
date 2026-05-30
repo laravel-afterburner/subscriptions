@@ -78,7 +78,7 @@ class Edit extends Component
             'banner' => 'Promotion code updated and synced to Stripe.',
         ]);
 
-        $this->redirectRoute('admin.subscription-promotions.show', $this->promotion);
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.show', $this->promotion);
     }
 
     public function render()

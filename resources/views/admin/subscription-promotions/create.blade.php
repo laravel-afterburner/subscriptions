@@ -1,8 +1,6 @@
-<x-app-layout>
+<x-app-layout :title="\Afterburner\Subscriptions\Support\PageHeader::make('Subscription Plans', action: 'Create promotion code')">
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Create Promotion Code
-        </h2>
+        <x-afterburner-subscriptions::page-header section="Subscription Plans" action="Create promotion code" />
     </x-slot>
 
     <div class="py-12">

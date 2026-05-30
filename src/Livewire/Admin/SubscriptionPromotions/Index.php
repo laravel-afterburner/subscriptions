@@ -19,7 +19,7 @@ class Index extends Component
     {
         $this->authorize('create', SubscriptionPromotionCode::class);
 
-        $this->redirectRoute('admin.subscription-promotions.create');
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.create');
     }
 
     public function showPromotion(int $promotionId): void
@@ -28,7 +28,7 @@ class Index extends Component
 
         $this->authorize('view', $promotion);
 
-        $this->redirectRoute('admin.subscription-promotions.show', $promotion);
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.show', $promotion);
     }
 
     public function editPromotion(int $promotionId): void
@@ -37,7 +37,7 @@ class Index extends Component
 
         $this->authorize('update', $promotion);
 
-        $this->redirectRoute('admin.subscription-promotions.edit', $promotion);
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.edit', $promotion);
     }
 
     public function render()

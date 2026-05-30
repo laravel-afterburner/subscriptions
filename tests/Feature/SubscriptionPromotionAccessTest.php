@@ -43,7 +43,7 @@ class SubscriptionPromotionAccessTest extends TestCase
         ]);
 
         $this->actingAs($user)
-            ->get(route('admin.subscription-promotions.show', $promotion))
+            ->get(route('admin.subscription-plans.promotion-codes.show', $promotion))
             ->assertForbidden();
     }
 }

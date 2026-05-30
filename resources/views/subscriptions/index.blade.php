@@ -1,8 +1,6 @@
-<x-app-layout title="Subscriptions">
+<x-app-layout :title="\Afterburner\Subscriptions\Support\PageHeader::make('Subscriptions')">
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Subscriptions
-        </h2>
+        <x-afterburner-subscriptions::page-header section="Subscriptions" />
     </x-slot>
 
     <div>

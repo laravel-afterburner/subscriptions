@@ -1,7 +1,8 @@
 @php
     $plan = $summary->plan();
+    $entityLabel = config('afterburner.entity_label', 'team');
     $limits = array_filter([
-        'entity members' => $entitlements->limit('max_users_per_team'),
+        $entityLabel.' members' => $entitlements->limit('max_users_per_team'),
         'storage (GB)' => $entitlements->limit('max_storage_gb'),
     ]);
     $featureSlugs = $entitlements->get('features', []);
@@ -20,7 +21,7 @@
             @else
                 <h4 class="text-xl font-semibold text-gray-900 dark:text-gray-100">No active plan</h4>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Choose a plan below to start or restore your entity's subscription.
+                    Choose a plan below to start or restore your {{ config('afterburner.entity_label', 'team') }}'s subscription.
                 </p>
             @endif
         </div>

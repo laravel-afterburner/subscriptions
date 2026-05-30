@@ -33,6 +33,17 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
         Route::get('/subscription-plans/create', [SubscriptionPlansAdminController::class, 'create'])
             ->name('admin.subscription-plans.create');
 
+        Route::get('/subscription-plans/promotion-codes/create', [SubscriptionPromotionsAdminController::class, 'create'])
+            ->name('admin.subscription-plans.promotion-codes.create');
+
+        Route::get('/subscription-plans/promotion-codes/{promotion}', [SubscriptionPromotionsAdminController::class, 'show'])
+            ->whereNumber('promotion')
+            ->name('admin.subscription-plans.promotion-codes.show');
+
+        Route::get('/subscription-plans/promotion-codes/{promotion}/edit', [SubscriptionPromotionsAdminController::class, 'edit'])
+            ->whereNumber('promotion')
+            ->name('admin.subscription-plans.promotion-codes.edit');
+
         Route::get('/subscription-plans/{plan}', [SubscriptionPlansAdminController::class, 'show'])
             ->whereNumber('plan')
             ->name('admin.subscription-plans.show');
@@ -40,19 +51,5 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
         Route::get('/subscription-plans/{plan}/edit', [SubscriptionPlansAdminController::class, 'edit'])
             ->whereNumber('plan')
             ->name('admin.subscription-plans.edit');
-
-        Route::get('/subscription-promotions', [SubscriptionPromotionsAdminController::class, 'index'])
-            ->name('admin.subscription-promotions.index');
-
-        Route::get('/subscription-promotions/create', [SubscriptionPromotionsAdminController::class, 'create'])
-            ->name('admin.subscription-promotions.create');
-
-        Route::get('/subscription-promotions/{promotion}', [SubscriptionPromotionsAdminController::class, 'show'])
-            ->whereNumber('promotion')
-            ->name('admin.subscription-promotions.show');
-
-        Route::get('/subscription-promotions/{promotion}/edit', [SubscriptionPromotionsAdminController::class, 'edit'])
-            ->whereNumber('promotion')
-            ->name('admin.subscription-promotions.edit');
     });
 });

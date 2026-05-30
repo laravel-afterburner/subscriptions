@@ -24,7 +24,7 @@ class SubscriptionCancelledNotification extends Notification implements ShouldQu
 
     public function toMail(object $notifiable): MailMessage
     {
-        $entityName = $this->team->name ?? 'your entity';
+        $entityName = $this->team->name ?? 'your '.config('afterburner.entity_label', 'team');
         $subscriptionsUrl = route('teams.subscriptions.index', $this->team);
 
         return (new MailMessage)

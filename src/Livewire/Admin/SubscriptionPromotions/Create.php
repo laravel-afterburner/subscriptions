@@ -60,7 +60,7 @@ class Create extends Component
             'banner' => 'Promotion code created and synced to Stripe.',
         ]);
 
-        $this->redirectRoute('admin.subscription-promotions.show', $promotion);
+        $this->redirectRoute('admin.subscription-plans.promotion-codes.show', $promotion);
     }
 
     public function render()

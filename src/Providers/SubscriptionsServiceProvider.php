@@ -179,15 +179,6 @@ class SubscriptionsServiceProvider extends ServiceProvider
                 'order' => 10,
                 'active' => fn () => request()->routeIs('admin.subscription-plans.*'),
             ]);
-
-            if (config('afterburner-subscriptions.promotions_enabled', true)) {
-                SystemAdminNavigation::register([
-                    'label' => 'Promotion Codes',
-                    'route' => 'admin.subscription-promotions.index',
-                    'order' => 11,
-                    'active' => fn () => request()->routeIs('admin.subscription-promotions.*'),
-                ]);
-            }
         }
     }
 

@@ -63,7 +63,7 @@
             <h4 class="text-base font-medium text-gray-900 dark:text-gray-100">Plan entitlements</h4>
             <dl class="grid gap-4 sm:grid-cols-2">
                 <div>
-                    <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Max users per entity</dt>
+                    <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Max users per {{ config('afterburner.entity_label', 'team') }}</dt>
                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
                         {{ $features['max_users_per_team'] ?? 'Unlimited' }}
                     </dd>

@@ -19,7 +19,7 @@ class Edit extends Component
 
     public string $description = '';
 
-    public string $currency = 'usd';
+    public string $currency = 'cad';
 
     public string $monthly_price = '';
 

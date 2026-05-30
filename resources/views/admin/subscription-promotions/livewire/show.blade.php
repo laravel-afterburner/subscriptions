@@ -1,6 +1,6 @@
 <div class="space-y-6">
-    <a href="{{ route('admin.subscription-promotions.index') }}" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">
-        &larr; Back to promotion codes
+    <a href="{{ route('admin.subscription-plans.index') }}#promotion-codes" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">
+        &larr; Back to subscription plans
     </a>
 
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 space-y-6">
@@ -56,7 +56,7 @@
             <div>
                 <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Redeem by</dt>
                 <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                    {{ $promotion->redeem_by?->format('M j, Y') ?? 'No expiry' }}
+                    {!! $promotion->redeem_by ? format_date_superscript($promotion->redeem_by, 'date') : 'No expiry' !!}
                 </dd>
             </div>
         </dl>

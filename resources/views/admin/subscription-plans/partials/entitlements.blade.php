@@ -7,7 +7,7 @@
 
     <div class="grid gap-4 sm:grid-cols-2">
         <div>
-            <x-label for="max_users_per_team" value="Max users per entity" />
+            <x-label for="max_users_per_team" :value="'Max users per '.config('afterburner.entity_label', 'team')" />
             <x-input id="max_users_per_team" type="number" min="1" class="mt-1 block w-full" wire:model="max_users_per_team" placeholder="Unlimited" />
             <x-input-error for="max_users_per_team" class="mt-2" />
         </div>

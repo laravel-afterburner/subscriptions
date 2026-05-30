@@ -27,7 +27,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'currency' => env('AFTERBURNER_SUBSCRIPTIONS_CURRENCY', 'usd'),
+    'currency' => env('AFTERBURNER_SUBSCRIPTIONS_CURRENCY', 'cad'),
 
     /*
     |--------------------------------------------------------------------------

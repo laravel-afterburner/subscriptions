@@ -8,13 +8,6 @@ use Illuminate\View\View;
 
 class SubscriptionPromotionsAdminController
 {
-    public function index(): View
-    {
-        Gate::authorize('viewAny', SubscriptionPromotionCode::class);
-
-        return view('afterburner-subscriptions::admin.subscription-promotions.index');
-    }
-
     public function create(): View
     {
         Gate::authorize('create', SubscriptionPromotionCode::class);

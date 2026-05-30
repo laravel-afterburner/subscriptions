@@ -419,7 +419,38 @@ Mock Stripe in tests; do not hit live API.
 
 ---
 
-## 18. Environment variables
+## 18. Strata local refresh (path repo `../strata`)
+
+Published views under `resources/views/vendor/afterburner-*` override package defaults. Republish **all** Afterburner package views (not only subscriptions):
+
+```bash
+cd ../strata
+php artisan afterburner:publish --force
+```
+
+**Views only** (agent shorthand: `repeat`):
+
+```bash
+php artisan afterburner:publish --force
+php artisan view:clear
+```
+
+**Full refresh** (agent shorthand: `repeat full`):
+
+```bash
+composer update laravel-afterburner/subscriptions --no-interaction
+php artisan afterburner:publish --force
+php artisan migrate --force
+php artisan view:clear
+php artisan optimize:clear
+php artisan config:clear
+```
+
+Do not run `vendor:publish --tag=afterburner-subscriptions-config --force` unless new config keys need a careful merge into Strata’s published config. Publish does not delete stale files under `resources/views/vendor/` — remove orphans if `diff` reports extras.
+
+---
+
+## 19. Environment variables
 
 ```env
 AFTERBURNER_SUBSCRIPTIONS_ENABLED=true
@@ -437,7 +468,7 @@ CASHIER_CURRENCY_LOCALE=en
 
 ---
 
-## 19. File creation order (for agents)
+## 20. File creation order (for agents)
 
 1. `composer.json`, `phpunit.xml`, `README.md`
 2. `config/afterburner-subscriptions.php`

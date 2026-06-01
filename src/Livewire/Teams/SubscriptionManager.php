@@ -10,12 +10,16 @@ use Afterburner\Subscriptions\Support\PlanEntitlements;
 use Afterburner\Subscriptions\Support\SubscriptionStatus;
 use Afterburner\Subscriptions\Support\SubscriptionSummary;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Stripe\Exception\InvalidRequestException;
 
 class SubscriptionManager extends Component
 {
+    use WithPagination;
+
     public Model $team;
 
     public ?string $searchQuery = null;
@@ -29,6 +33,11 @@ class SubscriptionManager extends Component
     public function mount(Model $team): void
     {
         $this->team = $team;
+    }
+
+    public function updatedSearchQuery(): void
+    {
+        $this->resetPage('invoicesPage');
     }
 
     public function subscribe(int $planId, string $interval): mixed
@@ -94,6 +103,16 @@ class SubscriptionManager extends Component
                 ]);
             }
         }
+
+        $page = LengthAwarePaginator::resolveCurrentPage('invoicesPage');
+        $perPage = 10;
+        $invoices = new LengthAwarePaginator(
+            $invoices->forPage($page, $perPage)->values(),
+            $invoices->count(),
+            $perPage,
+            $page,
+            ['pageName' => 'invoicesPage'],
+        );
 
         return view('afterburner-subscriptions::subscriptions.livewire.manager', [
             'plans' => $plans,

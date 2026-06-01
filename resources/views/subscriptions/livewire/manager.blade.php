@@ -257,6 +257,10 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="mt-4">
+                {{ $invoices->links() }}
+            </div>
         </x-slot>
     </x-action-section>
 </div>

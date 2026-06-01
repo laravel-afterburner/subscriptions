@@ -6,9 +6,11 @@
         </x-slot>
         <x-slot name="content">
             <div class="mb-4 flex justify-end">
-                <x-button type="button" wire:click="createPromotion" no-spinner>
-                    New promotion code
-                </x-button>
+                @can('create', \Afterburner\Subscriptions\Models\SubscriptionPromotionCode::class)
+                    <x-button href="{{ route('admin.subscription-plans.promotion-codes.create') }}" wire:navigate>
+                        New promotion code
+                    </x-button>
+                @endcan
             </div>
 
             <div class="-mx-4 overflow-x-auto sm:-mx-6">
@@ -28,13 +30,13 @@
                         @forelse ($promotions as $promotion)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="px-6 py-4 text-sm">
-                                    <button
-                                        type="button"
-                                        wire:click="showPromotion({{ $promotion->id }})"
+                                    <a
+                                        href="{{ route('admin.subscription-plans.promotion-codes.show', $promotion) }}"
+                                        wire:navigate
                                         class="font-mono font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 text-left"
                                     >
                                         {{ $promotion->code }}
-                                    </button>
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $promotion->formattedDiscount() }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
@@ -49,8 +51,10 @@
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <x-action-icon type="view" wire:click="showPromotion({{ $promotion->id }})" title="View promotion" />
-                                        <x-action-icon type="edit" wire:click="editPromotion({{ $promotion->id }})" title="Edit promotion" />
+                                        <x-action-icon type="view" href="{{ route('admin.subscription-plans.promotion-codes.show', $promotion) }}" wire:navigate title="View promotion" />
+                                        @can('update', $promotion)
+                                            <x-action-icon type="edit" href="{{ route('admin.subscription-plans.promotion-codes.edit', $promotion) }}" wire:navigate title="Edit promotion" />
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

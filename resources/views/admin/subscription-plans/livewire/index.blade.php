@@ -6,9 +6,11 @@
         </x-slot>
         <x-slot name="content">
             <div class="mb-4 flex justify-end">
-                <x-button type="button" wire:click="createPlan" no-spinner>
-                    Create plan
-                </x-button>
+                @can('create', \Afterburner\Subscriptions\Models\SubscriptionPlan::class)
+                    <x-button href="{{ route('admin.subscription-plans.create') }}" wire:navigate>
+                        Create plan
+                    </x-button>
+                @endcan
             </div>
 
             <div class="-mx-4 overflow-x-auto sm:-mx-6">
@@ -29,13 +31,13 @@
                         @forelse ($plans as $plan)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="px-6 py-4 text-sm">
-                                    <button
-                                        type="button"
-                                        wire:click="showPlan({{ $plan->id }})"
+                                    <a
+                                        href="{{ route('admin.subscription-plans.show', $plan) }}"
+                                        wire:navigate
                                         class="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 text-left"
                                     >
                                         {{ $plan->name }}
-                                    </button>
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $plan->formattedPrice(\Afterburner\Subscriptions\Enums\BillingInterval::Monthly) }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $plan->formattedPrice(\Afterburner\Subscriptions\Enums\BillingInterval::Annual) }}</td>
@@ -62,8 +64,10 @@
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <x-action-icon type="view" wire:click="showPlan({{ $plan->id }})" title="View plan" />
-                                        <x-action-icon type="edit" wire:click="editPlan({{ $plan->id }})" title="Edit plan" />
+                                        <x-action-icon type="view" href="{{ route('admin.subscription-plans.show', $plan) }}" wire:navigate title="View plan" />
+                                        @can('update', $plan)
+                                            <x-action-icon type="edit" href="{{ route('admin.subscription-plans.edit', $plan) }}" wire:navigate title="Edit plan" />
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

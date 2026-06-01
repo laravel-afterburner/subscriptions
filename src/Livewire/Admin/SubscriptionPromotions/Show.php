@@ -16,13 +16,6 @@ class Show extends Component
         $this->promotion = $promotion->load('subscriptionPlan');
     }
 
-    public function editPromotion(): void
-    {
-        $this->authorize('update', $this->promotion);
-
-        $this->redirectRoute('admin.subscription-plans.promotion-codes.edit', $this->promotion);
-    }
-
     public function render()
     {
         return view('afterburner-subscriptions::admin.subscription-promotions.livewire.show', [

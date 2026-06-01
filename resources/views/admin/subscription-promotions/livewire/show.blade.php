@@ -20,7 +20,7 @@
                 </span>
 
                 @if ($canEdit)
-                    <x-button type="button" wire:click="editPromotion" no-spinner>
+                    <x-button href="{{ route('admin.subscription-plans.promotion-codes.edit', $promotion) }}" wire:navigate>
                         Edit promotion
                     </x-button>
                 @endif

@@ -17,13 +17,6 @@ class Show extends Component
         $this->plan = $plan;
     }
 
-    public function editPlan(): void
-    {
-        $this->authorize('update', $this->plan);
-
-        $this->redirectRoute('admin.subscription-plans.edit', $this->plan);
-    }
-
     public function render()
     {
         return view('afterburner-subscriptions::admin.subscription-plans.livewire.show', [

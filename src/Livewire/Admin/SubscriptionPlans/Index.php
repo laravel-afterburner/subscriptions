@@ -16,31 +16,6 @@ class Index extends Component
         $this->authorize('viewAny', SubscriptionPlan::class);
     }
 
-    public function createPlan(): void
-    {
-        $this->authorize('create', SubscriptionPlan::class);
-
-        $this->redirectRoute('admin.subscription-plans.create');
-    }
-
-    public function showPlan(int $planId): void
-    {
-        $plan = SubscriptionPlan::query()->findOrFail($planId);
-
-        $this->authorize('view', $plan);
-
-        $this->redirectRoute('admin.subscription-plans.show', $plan);
-    }
-
-    public function editPlan(int $planId): void
-    {
-        $plan = SubscriptionPlan::query()->findOrFail($planId);
-
-        $this->authorize('update', $plan);
-
-        $this->redirectRoute('admin.subscription-plans.edit', $plan);
-    }
-
     public function render()
     {
         $plans = SubscriptionPlan::query()

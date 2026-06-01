@@ -15,31 +15,6 @@ class Index extends Component
         $this->authorize('viewAny', SubscriptionPromotionCode::class);
     }
 
-    public function createPromotion(): void
-    {
-        $this->authorize('create', SubscriptionPromotionCode::class);
-
-        $this->redirectRoute('admin.subscription-plans.promotion-codes.create');
-    }
-
-    public function showPromotion(int $promotionId): void
-    {
-        $promotion = SubscriptionPromotionCode::query()->findOrFail($promotionId);
-
-        $this->authorize('view', $promotion);
-
-        $this->redirectRoute('admin.subscription-plans.promotion-codes.show', $promotion);
-    }
-
-    public function editPromotion(int $promotionId): void
-    {
-        $promotion = SubscriptionPromotionCode::query()->findOrFail($promotionId);
-
-        $this->authorize('update', $promotion);
-
-        $this->redirectRoute('admin.subscription-plans.promotion-codes.edit', $promotion);
-    }
-
     public function render()
     {
         return view('afterburner-subscriptions::admin.subscription-promotions.livewire.index', [

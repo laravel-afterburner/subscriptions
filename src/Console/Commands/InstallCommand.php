@@ -65,15 +65,6 @@ class InstallCommand extends Command
     {
         $envVars = [
             '',
-            '# Afterburner Subscriptions Configuration',
-            'AFTERBURNER_SUBSCRIPTIONS_ENABLED=true',
-            'AFTERBURNER_SUBSCRIPTIONS_DEFAULT_TRIAL_DAYS=30',
-            'AFTERBURNER_SUBSCRIPTIONS_CURRENCY=usd',
-            'AFTERBURNER_SUBSCRIPTIONS_BILLING_ROLE_SLUGS=president,treasurer',
-            'AFTERBURNER_SUBSCRIPTIONS_PROMOTIONS_ENABLED=true',
-            'AFTERBURNER_SUBSCRIPTIONS_ALLOW_CHECKOUT_PROMO_CODES=true',
-            'AFTERBURNER_SUBSCRIPTIONS_TRIAL_FULL_ACCESS=true',
-            '',
             '# Stripe / Cashier',
             'STRIPE_KEY=',
             'STRIPE_SECRET=',

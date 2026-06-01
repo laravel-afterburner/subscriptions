@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->string('currency', 3)->default('usd');
             $table->string('stripe_product_id')->nullable();
             $table->unsignedInteger('monthly_price_cents');
             $table->unsignedInteger('annual_price_cents');
@@ -26,10 +27,32 @@ return new class extends Migration
 
             $table->index(['is_active', 'sort_order']);
         });
+
+        Schema::table('teams', function (Blueprint $table) {
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four', 4)->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->foreignId('subscription_plan_id')
+                ->nullable()
+                ->constrained('subscription_plans')
+                ->nullOnDelete();
+            $table->string('billing_email')->nullable();
+        });
     }
 
     public function down(): void
     {
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('subscription_plan_id');
+
+            foreach (['billing_email', 'trial_ends_at', 'pm_last_four', 'pm_type', 'stripe_id'] as $column) {
+                if (Schema::hasColumn('teams', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
+        });
+
         Schema::dropIfExists('subscription_plans');
     }
 };

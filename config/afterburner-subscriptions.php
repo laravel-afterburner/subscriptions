@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'enabled' => env('AFTERBURNER_SUBSCRIPTIONS_ENABLED', true),
+    'enabled' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ return [
     |
     */
 
-    'default_trial_days' => (int) env('AFTERBURNER_SUBSCRIPTIONS_DEFAULT_TRIAL_DAYS', 30),
+    'default_trial_days' => 30,
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'currency' => env('AFTERBURNER_SUBSCRIPTIONS_CURRENCY', 'cad'),
+    'currency' => 'cad',
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'minimum_price_cents' => (int) env('AFTERBURNER_SUBSCRIPTIONS_MINIMUM_PRICE_CENTS', 50),
+    'minimum_price_cents' => 50,
 
     /*
     |--------------------------------------------------------------------------
@@ -67,10 +67,7 @@ return [
     |
     */
 
-    'billing_role_slugs' => array_filter(array_map(
-        'trim',
-        explode(',', env('AFTERBURNER_SUBSCRIPTIONS_BILLING_ROLE_SLUGS', 'president,treasurer'))
-    )),
+    'billing_role_slugs' => ['president', 'treasurer'],
 
     /*
     |--------------------------------------------------------------------------
@@ -91,7 +88,7 @@ return [
     |
     */
 
-    'trial_full_access' => env('AFTERBURNER_SUBSCRIPTIONS_TRIAL_FULL_ACCESS', true),
+    'trial_full_access' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -132,9 +129,9 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'promotions_enabled' => env('AFTERBURNER_SUBSCRIPTIONS_PROMOTIONS_ENABLED', true),
+    'promotions_enabled' => true,
 
-    'allow_checkout_promotion_codes' => env('AFTERBURNER_SUBSCRIPTIONS_ALLOW_CHECKOUT_PROMO_CODES', true),
+    'allow_checkout_promotion_codes' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -145,7 +142,7 @@ return [
     |
     */
 
-    'usage_billing_enabled' => env('AFTERBURNER_SUBSCRIPTIONS_USAGE_BILLING_ENABLED', false),
+    'usage_billing_enabled' => false,
 
     /*
     |--------------------------------------------------------------------------

@@ -8,11 +8,17 @@ order: 10
 
 The Subscriptions package connects your {{ entity_label }} to Stripe billing—plans, trials, promotions, and entitlements that control which features are available.
 
+## Navigation
+
+Open **Subscriptions** from your {{ entity_label }} menu (between **Financials** and **Help & Support** when those items are visible).
+
 ## Who can manage billing
 
 Members with **view billing** permission can open subscription pages for the current {{ entity_label }}. **Manage billing** permission is required to change plans or payment methods.
 
+System administrators manage subscription plans and promotion codes from the system admin area — separate from {{ entity_label }}-level billing.
+
 ## Related guides
 
-- [Managing subscription and billing](/playbook/subscriptions/managing-billing)
-- [Platform {{ entity_label }} overview](/playbook/platform/entity-overview)
+- [Managing subscription and billing](/help/subscriptions/managing-billing)
+- [Platform {{ entity_label }} overview](/help/platform/entity-overview)

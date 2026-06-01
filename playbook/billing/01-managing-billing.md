@@ -6,7 +6,7 @@ order: 10
 
 ## Overview
 
-{{ entity_label_plural_title }} on a paid plan manage subscription status, payment methods, and invoices through the **Subscriptions** area in {{ entity_label }} settings navigation.
+{{ entity_label_plural_title }} on a paid plan manage subscription status, payment methods, and invoices through the **Subscriptions** area in the {{ entity_label }} menu.
 
 ## Steps
 
@@ -22,5 +22,5 @@ During a trial, some packages (such as Voting) may remain available until the tr
 
 ## See also
 
-- [Subscriptions overview](/playbook/subscriptions/overview)
-- [Voting overview](/playbook/voting/overview) — features may depend on entitlements
+- [Subscriptions overview](/help/subscriptions/overview)
+- [Voting overview](/help/voting/overview) — features may depend on entitlements

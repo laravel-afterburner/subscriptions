@@ -51,6 +51,10 @@ class SubscriptionEntitlementGate
             return true;
         }
 
+        if (! SubscriptionStatus::forTeam($team)->isActive()) {
+            return false;
+        }
+
         return method_exists($team, 'hasEntitlement')
             && $team->hasEntitlement($featureSlug);
     }
@@ -67,6 +71,10 @@ class SubscriptionEntitlementGate
 
         if (static::teamOnFullAccessTrial($team)) {
             return true;
+        }
+
+        if (! SubscriptionStatus::forTeam($team)->isActive()) {
+            return false;
         }
 
         return method_exists($team, 'withinEntitlementLimit')

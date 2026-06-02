@@ -55,4 +55,39 @@ class EnsureSubscriptionActiveTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
     }
+
+    public function test_allows_system_admin_when_subscription_inactive(): void
+    {
+        [$user, $team] = $this->createTeamWithUser();
+        $user->update([
+            'current_team_id' => $team->id,
+            'is_system_admin' => true,
+        ]);
+        $team->update(['trial_ends_at' => now()->subDay()]);
+
+        $route = Route::get('/test-protected', fn () => 'ok')->name('test.protected');
+        $request = Request::create('/test-protected', 'GET');
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(fn () => $route->bind($request));
+
+        $response = (new EnsureSubscriptionActive)->handle($request, fn () => response('ok'));
+
+        $this->assertSame(200, $response->getStatusCode());
+    }
+
+    public function test_allows_dashboard_when_subscription_inactive(): void
+    {
+        [$user, $team] = $this->createTeamWithUser();
+        $user->update(['current_team_id' => $team->id]);
+        $team->update(['trial_ends_at' => now()->subDay()]);
+
+        $route = Route::get('/dashboard', fn () => 'ok')->name('dashboard');
+        $request = Request::create('/dashboard', 'GET');
+        $request->setUserResolver(fn () => $user);
+        $request->setRouteResolver(fn () => $route->bind($request));
+
+        $response = (new EnsureSubscriptionActive)->handle($request, fn () => response('ok'));
+
+        $this->assertSame(200, $response->getStatusCode());
+    }
 }

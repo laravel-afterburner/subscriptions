@@ -2,7 +2,7 @@
 
 namespace Afterburner\Subscriptions\Middleware;
 
-use Afterburner\Subscriptions\Support\SubscriptionStatus;
+use Afterburner\Subscriptions\Support\SubscriptionRouteAccess;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,32 +11,11 @@ class EnsureSubscriptionActive
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! config('afterburner-subscriptions.enabled', true)) {
+        if (SubscriptionRouteAccess::allowsRequest($request)) {
             return $next($request);
         }
 
-        $routeName = $request->route()?->getName();
-        $exemptRoutes = config('afterburner-subscriptions.exempt_route_names', []);
-
-        if ($routeName && in_array($routeName, $exemptRoutes, true)) {
-            return $next($request);
-        }
-
-        $user = $request->user();
-
-        if (! $user || ! $user->currentTeam) {
-            return $next($request);
-        }
-
-        $team = $user->currentTeam;
-
-        if (SubscriptionStatus::forTeam($team)->isActive()) {
-            return $next($request);
-        }
-
-        if ($routeName === 'teams.subscriptions.index') {
-            return $next($request);
-        }
+        $team = $request->user()->currentTeam;
 
         return redirect()
             ->route('teams.subscriptions.index', $team)

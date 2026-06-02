@@ -55,6 +55,15 @@ class SubscriptionEntitlementGateTest extends TestCase
 
         $team->assignPlan($plan);
 
+        $this->assertFalse(SubscriptionEntitlementGate::allows($team, 'documents'));
+
+        $team->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_test_documents',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+        ]);
+
         $this->assertTrue(SubscriptionEntitlementGate::allows($team, 'documents'));
         $this->assertFalse(SubscriptionEntitlementGate::allows($team, 'voting'));
     }
@@ -96,6 +105,13 @@ class SubscriptionEntitlementGateTest extends TestCase
         ]);
 
         $team->assignPlan($plan);
+
+        $team->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_test_starter',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+        ]);
 
         $this->assertTrue(SubscriptionEntitlementGate::withinLimit($team, 'max_users_per_team', 5));
         $this->assertFalse(SubscriptionEntitlementGate::withinLimit($team, 'max_users_per_team', 6));

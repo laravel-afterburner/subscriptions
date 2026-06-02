@@ -166,9 +166,12 @@ return [
     */
 
     'exempt_route_names' => [
+        'dashboard',
         'teams.subscriptions.index',
         'teams.subscriptions.billing-portal',
         'profile.show',
+        'personal-settings.show',
+        'security.show',
         'logout',
         'verification.verify',
         'verification.notice',

@@ -5,7 +5,7 @@ namespace Afterburner\Subscriptions\Listeners;
 use Afterburner\Subscriptions\Events\SubscriptionCancelled;
 use Afterburner\Subscriptions\Events\SubscriptionPaymentFailed;
 use Afterburner\Subscriptions\Events\TeamSubscribed;
-use App\Services\AuditService;
+use App\Support\Audit\AuditLogger;
 
 class LogSubscriptionAudit
 {
@@ -53,23 +53,24 @@ class LogSubscriptionAudit
     /**
      * @param  array<string, mixed>  $changes
      */
-    protected function log(string $category, string $eventName, object $team, array $changes): void
+    protected function log(string $category, string $eventName, object $team, array $context): void
     {
-        if (! class_exists(AuditService::class) || ! config('audit.enabled', true)) {
-            return;
-        }
+        $summary = match ($eventName) {
+            'subscription.payment_failed' => 'Subscription payment failed.',
+            'subscription.cancelled' => 'Subscription cancelled.',
+            'subscription.subscribed' => isset($context['plan_name'])
+                ? "Team subscribed to {$context['plan_name']}."
+                : 'Team subscribed to a plan.',
+            default => $eventName,
+        };
 
-        try {
-            app(AuditService::class)->log(
-                actionType: 'event',
-                category: $category,
-                eventName: $eventName,
-                auditable: $team,
-                changes: $changes,
-                teamId: $team->getKey()
-            );
-        } catch (\Throwable) {
-            // Audit failures must not break billing flows.
-        }
+        AuditLogger::log(
+            category: $category,
+            eventName: $eventName,
+            auditable: $team,
+            changes: AuditLogger::changesWithSummary($summary, context: $context),
+            teamId: $team->getKey(),
+            actionType: 'event',
+        );
     }
 }

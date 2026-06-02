@@ -33,6 +33,7 @@ use Afterburner\Subscriptions\Policies\SubscriptionPlanPolicy;
 use Afterburner\Subscriptions\Policies\SubscriptionPromotionPolicy;
 use Afterburner\Playbook\Support\Playbook;
 use App\Models\Team;
+use App\Support\Audit\AuditCategories;
 use App\Support\SystemAdminNavigation;
 use App\Support\TeamNavigation;
 use Illuminate\Database\Eloquent\Model;
@@ -92,6 +93,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
         $this->registerNavigation();
         $this->registerPlaybook();
         $this->registerEventListeners();
+        $this->registerAuditCategories();
         $this->registerPackageSeeder();
         $this->registerSchedule();
 
@@ -168,7 +170,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
 
                     return $user->can('viewBilling', $user->currentTeam);
                 },
-                'active' => fn () => request()->routeIs('teams.subscriptions.*'),
+                'active' => fn () => \App\Support\NavigationActive::routeIs('teams.subscriptions.*'),
             ]);
         }
 
@@ -177,7 +179,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
                 'label' => 'Subscription Plans',
                 'route' => 'admin.subscription-plans.index',
                 'order' => 10,
-                'active' => fn () => request()->routeIs('admin.subscription-plans.*'),
+                'active' => fn () => \App\Support\NavigationActive::routeIs('admin.subscription-plans.*'),
             ]);
         }
     }
@@ -196,6 +198,17 @@ class SubscriptionsServiceProvider extends ServiceProvider
             'enabled' => fn () => config('afterburner-subscriptions.enabled', true),
             'permission' => fn ($user) => $user?->currentTeam
                 && $user->can('viewBilling', $user->currentTeam),
+        ]);
+    }
+
+    protected function registerAuditCategories(): void
+    {
+        if (! class_exists(AuditCategories::class)) {
+            return;
+        }
+
+        AuditCategories::register([
+            'billing' => 'Billing',
         ]);
     }
 

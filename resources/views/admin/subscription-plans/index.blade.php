@@ -9,5 +9,7 @@
         @if (config('afterburner-subscriptions.promotions_enabled', true))
             @livewire('subscriptions.admin.promotions.index')
         @endif
+
+        @livewire('subscriptions.admin.team-trials.index')
     </div>
 </x-app-layout>

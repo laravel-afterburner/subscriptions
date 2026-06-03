@@ -2,6 +2,7 @@
 
 namespace Afterburner\Subscriptions\Providers;
 
+use Afterburner\Playbook\Support\Playbook;
 use Afterburner\Subscriptions\Console\Commands\InstallCommand;
 use Afterburner\Subscriptions\Console\Commands\NotifyTrialEndingCommand;
 use Afterburner\Subscriptions\Console\Commands\SyncTeamBillingCommand;
@@ -9,33 +10,38 @@ use Afterburner\Subscriptions\Database\Seeders\SubscriptionsPermissionsSeeder;
 use Afterburner\Subscriptions\Events\SubscriptionCancelled;
 use Afterburner\Subscriptions\Events\SubscriptionPaymentFailed;
 use Afterburner\Subscriptions\Events\TeamSubscribed;
-use Afterburner\Subscriptions\Middleware\EnsureEntitlement;
-use Afterburner\Subscriptions\Middleware\EnsureSubscriptionActive;
-use Afterburner\Subscriptions\Support\SubscriptionEntitlementGate;
 use Afterburner\Subscriptions\Listeners\LogSubscriptionAudit;
 use Afterburner\Subscriptions\Listeners\ProcessStripeWebhook;
 use Afterburner\Subscriptions\Listeners\SendBillingNotification;
 use Afterburner\Subscriptions\Listeners\SendSubscriptionCancelledNotification;
 use Afterburner\Subscriptions\Listeners\StartTrialOnTeamCreated;
-use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Create as CreatePromotion;
-use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Edit as EditPromotion;
-use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Index as PromotionsIndex;
-use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Show as ShowPromotion;
-use Illuminate\Console\Scheduling\Schedule;
 use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPlans\Create as CreatePlan;
 use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPlans\Edit as EditPlan;
 use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPlans\Index as PlansIndex;
 use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPlans\Show as ShowPlan;
+use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Create as CreatePromotion;
+use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Edit as EditPromotion;
+use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Index as PromotionsIndex;
+use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPromotions\Show as ShowPromotion;
+use Afterburner\Subscriptions\Livewire\Admin\TeamTrials\Index as TeamTrialsIndex;
 use Afterburner\Subscriptions\Livewire\Teams\SubscriptionManager;
+use Afterburner\Subscriptions\Middleware\EnsureEntitlement;
+use Afterburner\Subscriptions\Middleware\EnsureSubscriptionActive;
 use Afterburner\Subscriptions\Models\SubscriptionPlan;
 use Afterburner\Subscriptions\Models\SubscriptionPromotionCode;
 use Afterburner\Subscriptions\Policies\SubscriptionPlanPolicy;
 use Afterburner\Subscriptions\Policies\SubscriptionPromotionPolicy;
-use Afterburner\Playbook\Support\Playbook;
+use Afterburner\Subscriptions\Policies\TeamTrialPolicy;
+use Afterburner\Subscriptions\Support\SubscriptionEntitlementGate;
+use Afterburner\Subscriptions\Support\TeamTrialManagement;
+use App\Events\TeamCreated;
 use App\Models\Team;
 use App\Support\Audit\AuditCategories;
+use App\Support\NavigationActive;
+use App\Support\PackageSeederRegistry;
 use App\Support\SystemAdminNavigation;
 use App\Support\TeamNavigation;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -117,16 +123,22 @@ class SubscriptionsServiceProvider extends ServiceProvider
         Livewire::component('subscriptions.admin.promotions.show', ShowPromotion::class);
         Livewire::component('subscriptions.admin.promotions.create', CreatePromotion::class);
         Livewire::component('subscriptions.admin.promotions.edit', EditPromotion::class);
+        Livewire::component('subscriptions.admin.team-trials.index', TeamTrialsIndex::class);
     }
 
     protected function registerPolicies(): void
     {
         Gate::policy(SubscriptionPlan::class, SubscriptionPlanPolicy::class);
         Gate::policy(SubscriptionPromotionCode::class, SubscriptionPromotionPolicy::class);
+        Gate::policy(TeamTrialManagement::class, TeamTrialPolicy::class);
     }
 
     protected function registerGates(): void
     {
+        Gate::define('manageTeamTrial', function ($user, Model $team) {
+            return app(TeamTrialPolicy::class)->update($user, $team);
+        });
+
         Gate::define('manageBilling', function ($user, Model $team) {
             return app(SubscriptionPlanPolicy::class)->manageBilling($user, $team);
         });
@@ -170,7 +182,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
 
                     return $user->can('viewBilling', $user->currentTeam);
                 },
-                'active' => fn () => \App\Support\NavigationActive::routeIs('teams.subscriptions.*'),
+                'active' => fn () => NavigationActive::routeIs('teams.subscriptions.*'),
             ]);
         }
 
@@ -179,7 +191,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
                 'label' => 'Subscription Plans',
                 'route' => 'admin.subscription-plans.index',
                 'order' => 10,
-                'active' => fn () => \App\Support\NavigationActive::routeIs('admin.subscription-plans.*'),
+                'active' => fn () => NavigationActive::routeIs('admin.subscription-plans.*'),
             ]);
         }
     }
@@ -223,18 +235,18 @@ class SubscriptionsServiceProvider extends ServiceProvider
         Event::listen(SubscriptionCancelled::class, [$auditListener, 'handleCancelled']);
         Event::listen(TeamSubscribed::class, [$auditListener, 'handleSubscribed']);
 
-        if (class_exists(\App\Events\TeamCreated::class)) {
-            Event::listen(\App\Events\TeamCreated::class, StartTrialOnTeamCreated::class);
+        if (class_exists(TeamCreated::class)) {
+            Event::listen(TeamCreated::class, StartTrialOnTeamCreated::class);
         }
     }
 
     protected function registerPackageSeeder(): void
     {
-        if (! class_exists(\App\Support\PackageSeederRegistry::class)) {
+        if (! class_exists(PackageSeederRegistry::class)) {
             return;
         }
 
-        \App\Support\PackageSeederRegistry::register(SubscriptionsPermissionsSeeder::class);
+        PackageSeederRegistry::register(SubscriptionsPermissionsSeeder::class);
     }
 
     protected function registerSchedule(): void

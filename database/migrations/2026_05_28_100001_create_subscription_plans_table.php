@@ -29,15 +29,32 @@ return new class extends Migration
         });
 
         Schema::table('teams', function (Blueprint $table) {
-            $table->string('stripe_id')->nullable()->index();
-            $table->string('pm_type')->nullable();
-            $table->string('pm_last_four', 4)->nullable();
-            $table->timestamp('trial_ends_at')->nullable();
-            $table->foreignId('subscription_plan_id')
-                ->nullable()
-                ->constrained('subscription_plans')
-                ->nullOnDelete();
-            $table->string('billing_email')->nullable();
+            if (! Schema::hasColumn('teams', 'stripe_id')) {
+                $table->string('stripe_id')->nullable()->index();
+            }
+
+            if (! Schema::hasColumn('teams', 'pm_type')) {
+                $table->string('pm_type')->nullable();
+            }
+
+            if (! Schema::hasColumn('teams', 'pm_last_four')) {
+                $table->string('pm_last_four', 4)->nullable();
+            }
+
+            if (! Schema::hasColumn('teams', 'trial_ends_at')) {
+                $table->timestamp('trial_ends_at')->nullable();
+            }
+
+            if (! Schema::hasColumn('teams', 'subscription_plan_id')) {
+                $table->foreignId('subscription_plan_id')
+                    ->nullable()
+                    ->constrained('subscription_plans')
+                    ->nullOnDelete();
+            }
+
+            if (! Schema::hasColumn('teams', 'billing_email')) {
+                $table->string('billing_email')->nullable();
+            }
         });
     }
 

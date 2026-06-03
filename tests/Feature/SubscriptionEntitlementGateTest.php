@@ -8,6 +8,7 @@ use Afterburner\Subscriptions\Support\SubscriptionEntitlementGate;
 use Afterburner\Subscriptions\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SubscriptionEntitlementGateTest extends TestCase
 {
@@ -63,6 +64,9 @@ class SubscriptionEntitlementGateTest extends TestCase
             'stripe_status' => 'active',
             'stripe_price' => 'price_test',
         ]);
+
+        $team->refresh();
+        $team->load('subscriptionPlan');
 
         $this->assertTrue(SubscriptionEntitlementGate::allows($team, 'documents'));
         $this->assertFalse(SubscriptionEntitlementGate::allows($team, 'voting'));
@@ -154,7 +158,7 @@ class SubscriptionEntitlementGateTest extends TestCase
         $request = Request::create('/test-documents', 'GET');
         $request->setUserResolver(fn () => $user);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
 
         (new EnsureEntitlement)->handle($request, fn () => response('ok'), 'documents');
     }

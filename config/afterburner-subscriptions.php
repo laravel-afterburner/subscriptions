@@ -125,6 +125,33 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Feature Slug Labels
+    |--------------------------------------------------------------------------
+    |
+    | Optional display labels for known_feature_slugs. Slugs are stored on plans
+    | and checked by packages; labels are for admin and billing UI only.
+    |
+    */
+
+    'feature_slug_labels' => [
+        'meetings' => 'Events',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Included App Features
+    |--------------------------------------------------------------------------
+    |
+    | Human-readable labels for core features the host app includes with every
+    | active subscription. Shown on subscription plans and billing screens in
+    | addition to plan-specific add-on package slugs.
+    |
+    */
+
+    'included_app_features' => [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Promotions
     |--------------------------------------------------------------------------
     */

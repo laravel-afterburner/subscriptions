@@ -63,6 +63,10 @@
         <span class="text-sm text-gray-700 dark:text-gray-300">Active</span>
     </label>
 
+    @include('afterburner-subscriptions::admin.subscription-plans.partials.included-app-features', [
+        'wrapperClass' => 'border-t border-gray-200 dark:border-gray-700 pt-6',
+    ])
+
     @include('afterburner-subscriptions::admin.subscription-plans.partials.entitlements', ['knownFeatureSlugs' => $knownFeatureSlugs])
 
     <div class="flex items-center justify-end gap-3">

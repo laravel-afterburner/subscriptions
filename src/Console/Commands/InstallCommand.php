@@ -56,7 +56,7 @@ class InstallCommand extends Command
         $this->comment('4. Set STRIPE_KEY, STRIPE_SECRET, and STRIPE_WEBHOOK_SECRET');
         $this->comment('5. Configure Stripe webhook endpoint: /stripe/webhook');
         $this->comment('6. Visit /admin/subscription-plans to create plans and promotion codes');
-        $this->comment('7. Add installed add-on slugs to known_feature_slugs in config/afterburner-subscriptions.php');
+        $this->comment('7. Configure known_feature_slugs and included_app_features in config/afterburner-subscriptions.php');
 
         return Command::SUCCESS;
     }

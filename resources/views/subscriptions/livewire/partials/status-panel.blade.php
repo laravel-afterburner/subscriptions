@@ -74,6 +74,13 @@
         </div>
     </div>
 
+    @include('afterburner-subscriptions::admin.subscription-plans.partials.included-app-features', [
+        'heading' => 'Included with your subscription',
+        'description' => true,
+        'descriptionText' => 'Core '.config('app.name', 'app').' features available with any active subscription.',
+        'listClass' => 'grid',
+    ])
+
     @if (count($limits) > 0 || count($featureSlugs) > 0)
         <div>
             <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Included with your plan</p>
@@ -91,7 +98,7 @@
                         <svg class="h-4 w-4 shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        {{ ucfirst(str_replace('_', ' ', $slug)) }}
+                        {{ \Afterburner\Subscriptions\Support\PlanFeatureSlug::label($slug) }}
                     </li>
                 @endforeach
             </ul>

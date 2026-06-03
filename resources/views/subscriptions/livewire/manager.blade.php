@@ -110,8 +110,19 @@
                             </p>
                         </div>
 
-                        @if ($maxUsers || $maxStorage || count($featureSlugs) > 0)
+                        @php
+                            $includedAppFeatures = \Afterburner\Subscriptions\Support\IncludedAppFeatures::labels();
+                        @endphp
+                        @if (count($includedAppFeatures) > 0 || $maxUsers || $maxStorage || count($featureSlugs) > 0)
                             <ul class="mt-5 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                @foreach ($includedAppFeatures as $label)
+                                    <li class="flex items-center gap-2">
+                                        <svg class="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        {{ $label }}
+                                    </li>
+                                @endforeach
                                 @if ($maxUsers)
                                     <li class="flex items-center gap-2">
                                         <svg class="h-4 w-4 shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -133,7 +144,7 @@
                                         <svg class="h-4 w-4 shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
-                                        {{ ucfirst(str_replace('_', ' ', $slug)) }}
+                                        {{ \Afterburner\Subscriptions\Support\PlanFeatureSlug::label($slug) }}
                                     </li>
                                 @endforeach
                             </ul>

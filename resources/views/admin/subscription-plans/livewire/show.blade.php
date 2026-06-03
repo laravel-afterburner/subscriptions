@@ -59,8 +59,12 @@
             </div>
         </dl>
 
+        @include('afterburner-subscriptions::admin.subscription-plans.partials.included-app-features', [
+            'wrapperClass' => 'border-t border-gray-200 dark:border-gray-700 pt-6',
+        ])
+
         <div class="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
-            <h4 class="text-base font-medium text-gray-900 dark:text-gray-100">Plan entitlements</h4>
+            <h4 class="text-base font-medium text-gray-900 dark:text-gray-100">Plan add-ons & limits</h4>
             <dl class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Max users per {{ config('afterburner.entity_label', 'team') }}</dt>
@@ -77,11 +81,11 @@
             </dl>
             @if (count($features['feature_slugs']) > 0)
                 <div>
-                    <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Included features</dt>
+                    <dt class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Add-on packages</dt>
                     <dd class="mt-2 flex flex-wrap gap-2">
                         @foreach ($features['feature_slugs'] as $slug)
                             <span class="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-                                {{ $slug }}
+                                {{ \Afterburner\Subscriptions\Support\PlanFeatureSlug::label($slug) }}
                             </span>
                         @endforeach
                     </dd>

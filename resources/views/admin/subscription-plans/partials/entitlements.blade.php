@@ -1,8 +1,8 @@
 <div class="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4">
-    <h4 class="text-base font-medium text-gray-900 dark:text-gray-100">Plan entitlements</h4>
+    <h4 class="text-base font-medium text-gray-900 dark:text-gray-100">Plan add-ons & limits</h4>
     <p class="text-sm text-gray-600 dark:text-gray-400">
-        Limits use null for unlimited. Feature slugs gate add-on packages via
-        <code class="text-xs">SubscriptionEntitlementGate</code> in each package.
+        Limits use null for unlimited. Feature slugs select which installed add-on packages this plan unlocks via
+        <code class="text-xs">SubscriptionEntitlementGate</code>.
     </p>
 
     <div class="grid gap-4 sm:grid-cols-2">
@@ -20,12 +20,12 @@
 
     @if (count($knownFeatureSlugs) > 0)
         <div>
-            <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Included features</span>
+            <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Add-on packages</span>
             <div class="flex flex-wrap gap-3">
                 @foreach ($knownFeatureSlugs as $slug)
                     <label class="flex items-center gap-2">
                         <input type="checkbox" wire:model="feature_slugs" value="{{ $slug }}" class="rounded border-gray-300 dark:border-gray-700">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $slug }}</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ \Afterburner\Subscriptions\Support\PlanFeatureSlug::label($slug) }}</span>
                     </label>
                 @endforeach
             </div>

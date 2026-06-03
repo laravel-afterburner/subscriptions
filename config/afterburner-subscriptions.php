@@ -148,7 +148,9 @@ return [
     |
     */
 
-    'included_app_features' => [],
+    'included_app_features' => [
+        'Members, roles & permissions',
+    ],
 
     /*
     |--------------------------------------------------------------------------

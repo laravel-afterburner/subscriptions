@@ -33,7 +33,7 @@ class BillingIssueNotification extends Notification implements ShouldQueue
         $entityName = $this->team->name ?? 'your '.config('afterburner.entity_label', 'team');
         $subscriptionsUrl = route('teams.subscriptions.index', $this->team);
 
-        return (new MailMessage)
+        return team_mail_message($this->team)
             ->subject("Billing issue for {$entityName}")
             ->line("A payment failed for {$entityName}.")
             ->line('Please update your payment method to avoid losing access to the application.')

@@ -27,7 +27,7 @@ class SubscriptionCancelledNotification extends Notification implements ShouldQu
         $entityName = $this->team->name ?? 'your '.config('afterburner.entity_label', 'team');
         $subscriptionsUrl = route('teams.subscriptions.index', $this->team);
 
-        return (new MailMessage)
+        return team_mail_message($this->team)
             ->subject("Subscription cancelled for {$entityName}")
             ->line("The subscription for {$entityName} has been cancelled or ended.")
             ->line('Resubscribe before access is removed to avoid interruption.')

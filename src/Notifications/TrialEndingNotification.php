@@ -30,7 +30,7 @@ class TrialEndingNotification extends Notification implements ShouldQueue
         $entityName = $this->team->name ?? 'your '.config('afterburner.entity_label', 'team');
         $subscriptionsUrl = route('teams.subscriptions.index', $this->team);
 
-        return (new MailMessage)
+        return team_mail_message($this->team)
             ->subject("Trial ending in {$this->daysRemaining} day(s) — {$entityName}")
             ->line("The free trial for {$entityName} ends in {$this->daysRemaining} day(s).")
             ->line('Subscribe now to keep access to the application.')

@@ -2,6 +2,8 @@
 
 namespace Afterburner\Subscriptions\Support;
 
+use Illuminate\Database\Eloquent\Model;
+
 class IncludedAppFeatures
 {
     /**
@@ -24,8 +26,30 @@ class IncludedAppFeatures
             ->all();
     }
 
+    /**
+     * Labels for the entity billing status panel (core app features, plus installed
+     * add-on packages during a full-access generic trial).
+     *
+     * @return list<string>
+     */
+    public static function billingLabelsForTeam(Model $team): array
+    {
+        $labels = self::labels();
+
+        if (SubscriptionEntitlementGate::teamOnFullAccessTrial($team)) {
+            $labels = array_merge($labels, SubscriptionPackageFeatures::trialFeatureLabels());
+        }
+
+        return array_values(array_unique($labels));
+    }
+
     public static function isConfigured(): bool
     {
         return count(self::labels()) > 0;
+    }
+
+    public static function isBillingSectionConfigured(Model $team): bool
+    {
+        return count(self::billingLabelsForTeam($team)) > 0;
     }
 }

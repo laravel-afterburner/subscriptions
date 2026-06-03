@@ -18,7 +18,7 @@ class SetTeamTrial
         $previous = $team->trial_ends_at;
 
         $team->forceFill([
-            'trial_ends_at' => $endsAt,
+            'trial_ends_at' => $endsAt->copy()->utc(),
         ])->save();
 
         $this->logChange($team, $previous, $endsAt, 'Team trial updated.');

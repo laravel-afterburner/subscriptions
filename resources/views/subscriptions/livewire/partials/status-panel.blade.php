@@ -8,6 +8,13 @@
     $featureSlugs = $entitlements->get('features', []);
     $featureSlugs = is_array($featureSlugs) ? $featureSlugs : [];
     $highlightStats = $summary->highlightStats();
+    $onFullAccessTrial = $team->onGenericTrial()
+        && config('afterburner-subscriptions.trial_full_access', true);
+    $includedAppFeatures = \Afterburner\Subscriptions\Support\IncludedAppFeatures::billingLabelsForTeam($team);
+    $subscription = $summary->subscription();
+    $showPaymentMethodPanel = ! $team->onGenericTrial()
+        || $summary->hasPaymentMethod()
+        || ($subscription && ! $subscription->ended());
 @endphp
 
 <div class="space-y-6">
@@ -47,41 +54,48 @@
         </div>
     @endif
 
-    <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex items-start gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
-                    <svg class="h-5 w-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
+    @if ($showPaymentMethodPanel)
+        <div class="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-start gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <svg class="h-5 w-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Payment method</p>
+                        @if ($summary->hasPaymentMethod())
+                            <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">{{ $summary->paymentMethodLabel() }}</p>
+                        @elseif ($summary->hasStripeCustomer())
+                            <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">No card on file — add one in the billing portal.</p>
+                        @else
+                            <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">Added when you subscribe to a plan.</p>
+                        @endif
+                    </div>
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Payment method</p>
-                    @if ($summary->hasPaymentMethod())
-                        <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">{{ $summary->paymentMethodLabel() }}</p>
-                    @elseif ($summary->hasStripeCustomer())
-                        <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">No card on file — add one in the billing portal.</p>
-                    @else
-                        <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">Added when you subscribe to a plan.</p>
-                    @endif
-                </div>
+                @if ($canManage && $summary->hasStripeCustomer())
+                    <x-secondary-button type="button" wire:click="openBillingPortal" class="shrink-0">
+                        Manage billing
+                    </x-secondary-button>
+                @endif
             </div>
-            @if ($canManage && $summary->hasStripeCustomer())
-                <x-secondary-button type="button" wire:click="openBillingPortal" class="shrink-0">
-                    Manage billing
-                </x-secondary-button>
-            @endif
         </div>
-    </div>
+    @endif
 
     @include('afterburner-subscriptions::admin.subscription-plans.partials.included-app-features', [
-        'heading' => 'Included with your subscription',
+        'includedAppFeatures' => $includedAppFeatures,
+        'heading' => $onFullAccessTrial
+            ? 'Included with your subscription trial'
+            : 'Included with your subscription',
         'description' => true,
-        'descriptionText' => 'Core '.config('app.name', 'app').' features available with any active subscription.',
+        'descriptionText' => $onFullAccessTrial
+            ? 'Core '.config('app.name', 'app').' features and all installed add-on packages during your trial.'
+            : 'Core '.config('app.name', 'app').' features available with any active subscription.',
         'listClass' => 'grid',
     ])
 
-    @if (count($limits) > 0 || count($featureSlugs) > 0)
+    @if (! $onFullAccessTrial && (count($limits) > 0 || count($featureSlugs) > 0))
         <div>
             <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Included with your plan</p>
             <ul class="mt-3 grid gap-2 sm:grid-cols-2">

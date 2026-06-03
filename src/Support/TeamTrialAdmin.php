@@ -28,6 +28,11 @@ class TeamTrialAdmin
         return in_array(HasSubscriptions::class, class_uses_recursive(static::teamModelClass()), true);
     }
 
+    public static function teamTimezone(Model $team): string
+    {
+        return TeamTrialDisplay::teamTimezone($team);
+    }
+
     /**
      * @return Builder<Model>
      */

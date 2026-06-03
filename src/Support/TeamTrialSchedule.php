@@ -21,11 +21,12 @@ class TeamTrialSchedule
         ?int $presetDays,
         ?string $customDate,
         array $allowedPresets,
+        string $timezone,
     ): CarbonInterface {
         if ($customDate !== null && $customDate !== '') {
-            $endsAt = Carbon::parse($customDate)->endOfDay();
+            $endsAt = Carbon::parse($customDate, $timezone)->endOfDay();
 
-            if ($endsAt->isPast()) {
+            if ($endsAt->lte(now($timezone))) {
                 throw new InvalidArgumentException('Trial end date must be in the future.');
             }
 
@@ -37,20 +38,25 @@ class TeamTrialSchedule
         }
 
         $base = match ($extendMode) {
-            self::EXTEND_FROM_CURRENT_END => self::baseForExtension($currentTrialEndsAt),
-            self::EXTEND_FROM_TODAY => now(),
+            self::EXTEND_FROM_CURRENT_END => self::baseForExtension($currentTrialEndsAt, $timezone),
+            self::EXTEND_FROM_TODAY => now($timezone),
             default => throw new InvalidArgumentException('Invalid extend mode.'),
         };
 
-        return $base->copy()->addDays($presetDays);
+        return static::endOfTrialDay($base->copy()->addDays($presetDays), $timezone);
     }
 
-    protected static function baseForExtension(?CarbonInterface $currentTrialEndsAt): CarbonInterface
+    protected static function baseForExtension(?CarbonInterface $currentTrialEndsAt, string $timezone): CarbonInterface
     {
         if ($currentTrialEndsAt !== null && $currentTrialEndsAt->isFuture()) {
-            return $currentTrialEndsAt;
+            return $currentTrialEndsAt->copy()->timezone($timezone);
         }
 
-        return now();
+        return now($timezone);
+    }
+
+    protected static function endOfTrialDay(CarbonInterface $moment, string $timezone): CarbonInterface
+    {
+        return $moment->copy()->timezone($timezone)->endOfDay();
     }
 }

@@ -7,9 +7,11 @@ use Afterburner\Subscriptions\Actions\SetTeamTrial;
 use Afterburner\Subscriptions\Support\SubscriptionStatus;
 use Afterburner\Subscriptions\Support\SubscriptionSummary;
 use Afterburner\Subscriptions\Support\TeamTrialAdmin;
+use Afterburner\Subscriptions\Support\TeamTrialDisplay;
 use Afterburner\Subscriptions\Support\TeamTrialManagement;
 use Afterburner\Subscriptions\Support\TeamTrialSchedule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use Livewire\Component;
@@ -72,6 +74,7 @@ class Index extends Component
         }
 
         $presets = TeamTrialAdmin::dayPresets();
+        $timezone = TeamTrialAdmin::teamTimezone($team);
 
         $this->validate([
             'selectedTeamId' => ['required', 'integer'],
@@ -80,7 +83,20 @@ class Index extends Component
                 TeamTrialSchedule::EXTEND_FROM_CURRENT_END,
             ])],
             'presetDays' => [Rule::requiredIf(! $this->useCustomDate), 'nullable', 'integer', Rule::in($presets)],
-            'customEndsAt' => [Rule::requiredIf($this->useCustomDate), 'nullable', 'date', 'after:today'],
+            'customEndsAt' => [
+                Rule::requiredIf($this->useCustomDate),
+                'nullable',
+                'date',
+                function (string $attribute, mixed $value, \Closure $fail) use ($timezone): void {
+                    if (! is_string($value) || $value === '') {
+                        return;
+                    }
+
+                    if (Carbon::parse($value, $timezone)->endOfDay()->lte(now($timezone))) {
+                        $fail('The trial end date must be after today in the team\'s timezone.');
+                    }
+                },
+            ],
         ]);
 
         try {
@@ -90,6 +106,7 @@ class Index extends Component
                 $this->useCustomDate ? null : $this->presetDays,
                 $this->useCustomDate ? $this->customEndsAt : null,
                 $presets,
+                $timezone,
             );
         } catch (InvalidArgumentException $exception) {
             $this->addError('presetDays', $exception->getMessage());
@@ -148,6 +165,9 @@ class Index extends Component
             'activeTrials' => $activeTrials,
             'dayPresets' => TeamTrialAdmin::dayPresets(),
             'supportsTrials' => TeamTrialAdmin::teamSupportsTrials(),
+            'minCustomTrialDate' => $selectedTeam
+                ? TeamTrialDisplay::minCustomTrialDate($selectedTeam)
+                : now()->addDay()->toDateString(),
         ]);
     }
 

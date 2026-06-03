@@ -67,7 +67,7 @@
                                         <dt class="text-gray-500 dark:text-gray-400">Trial ends</dt>
                                         <dd class="font-medium text-gray-900 dark:text-gray-100">
                                             @if ($selectedTeam->trial_ends_at)
-                                                {{ $selectedTeam->trial_ends_at->timezone(config('app.timezone'))->format('M j, Y g:i A T') }}
+                                                {!! \Afterburner\Subscriptions\Support\TeamTrialDisplay::formatTrialEndsAt($selectedTeam->trial_ends_at, $selectedTeam) !!}
                                             @else
                                                 —
                                             @endif
@@ -119,7 +119,10 @@
                                     @if ($useCustomDate)
                                         <div class="max-w-xs">
                                             <x-label for="customEndsAt" value="End date" />
-                                            <x-input id="customEndsAt" type="date" class="mt-1 block w-full" wire:model="customEndsAt" min="{{ now()->addDay()->toDateString() }}" />
+                                            <x-input id="customEndsAt" type="date" class="mt-1 block w-full" wire:model="customEndsAt" min="{{ $minCustomTrialDate }}" />
+                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                Trial ends at end of day in the team's timezone ({{ \Afterburner\Subscriptions\Support\TeamTrialDisplay::teamTimezone($selectedTeam) }}).
+                                            </p>
                                             <x-input-error for="customEndsAt" class="mt-2" />
                                         </div>
                                     @else
@@ -200,7 +203,7 @@
                                                 <span class="block text-xs font-normal text-gray-500 dark:text-gray-400">#{{ $trialTeam->getKey() }}</span>
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                                {{ $trialTeam->trial_ends_at->timezone(config('app.timezone'))->format('M j, Y') }}
+                                                {!! \Afterburner\Subscriptions\Support\TeamTrialDisplay::formatTrialEndsAt($trialTeam->trial_ends_at, $trialTeam) !!}
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                                                 {{ $rowSummary->trialDaysRemaining() ?? '—' }}

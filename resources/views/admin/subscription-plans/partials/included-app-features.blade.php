@@ -1,5 +1,5 @@
 @php
-    $includedAppFeatures = \Afterburner\Subscriptions\Support\IncludedAppFeatures::labels();
+    $includedAppFeatures = $includedAppFeatures ?? \Afterburner\Subscriptions\Support\IncludedAppFeatures::labels();
 @endphp
 
 @if (count($includedAppFeatures) > 0)

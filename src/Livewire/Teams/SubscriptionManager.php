@@ -116,6 +116,7 @@ class SubscriptionManager extends Component
 
         return view('afterburner-subscriptions::subscriptions.livewire.manager', [
             'plans' => $plans,
+            'team' => $this->team,
             'statusLabel' => $status->statusLabel(),
             'isActive' => $status->isActive(),
             'summary' => SubscriptionSummary::forTeam($this->team),

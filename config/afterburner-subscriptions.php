@@ -165,6 +165,55 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Package Composer Names
+    |--------------------------------------------------------------------------
+    |
+    | Maps entitlement slugs to Composer package names for detecting installed
+    | add-ons on the billing screen during a full-access trial.
+    |
+    */
+
+    'package_composer_names' => [
+        'documents' => 'laravel-afterburner/documents',
+        'voting' => 'laravel-afterburner/voting',
+        'meetings' => 'laravel-afterburner/meetings',
+        'communications' => 'laravel-afterburner/communications',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Package Features
+    |--------------------------------------------------------------------------
+    |
+    | Optional billing UI feature bullets per add-on slug. Packages may also
+    | register via SubscriptionPackageFeatures::register() in their provider.
+    |
+    */
+
+    'package_features' => [
+        'documents' => [
+            'Document library & folders',
+            'Upload, preview & download',
+        ],
+        'voting' => [
+            'Electronic ballots',
+            'Proxy voting',
+            'Results & reporting',
+        ],
+        'meetings' => [
+            'Council meetings, AGMs & sessions',
+            'Meeting notices',
+            'Calendar & ICS subscription',
+            'Action items',
+        ],
+        'communications' => [
+            'Announcements',
+            'Discussions',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Promotions
     |--------------------------------------------------------------------------
     */

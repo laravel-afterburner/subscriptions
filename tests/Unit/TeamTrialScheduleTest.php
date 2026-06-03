@@ -8,7 +8,9 @@ use InvalidArgumentException;
 
 class TeamTrialScheduleTest extends TestCase
 {
-    public function test_from_today_adds_preset_days(): void
+    protected string $timezone = 'America/Toronto';
+
+    public function test_from_today_ends_at_midnight_in_team_timezone(): void
     {
         $endsAt = TeamTrialSchedule::resolveEndsAt(
             null,
@@ -16,16 +18,20 @@ class TeamTrialScheduleTest extends TestCase
             30,
             null,
             [30, 60, 90],
+            $this->timezone,
         );
 
+        $localized = $endsAt->copy()->timezone($this->timezone);
+
         $this->assertTrue($endsAt->isFuture());
-        $this->assertGreaterThanOrEqual(29, (int) now()->startOfDay()->diffInDays($endsAt->startOfDay(), false));
-        $this->assertLessThanOrEqual(31, (int) now()->startOfDay()->diffInDays($endsAt->startOfDay(), false));
+        $this->assertTrue($localized->isEndOfDay());
+        $this->assertGreaterThanOrEqual(29, (int) now($this->timezone)->startOfDay()->diffInDays($localized->startOfDay(), false));
+        $this->assertLessThanOrEqual(31, (int) now($this->timezone)->startOfDay()->diffInDays($localized->startOfDay(), false));
     }
 
     public function test_from_current_end_extends_active_trial(): void
     {
-        $currentEnd = now()->addDays(10);
+        $currentEnd = now($this->timezone)->addDays(10)->endOfDay();
 
         $endsAt = TeamTrialSchedule::resolveEndsAt(
             $currentEnd,
@@ -33,28 +39,36 @@ class TeamTrialScheduleTest extends TestCase
             30,
             null,
             [30, 60, 90],
+            $this->timezone,
         );
 
+        $localized = $endsAt->copy()->timezone($this->timezone);
+
+        $this->assertTrue($localized->isEndOfDay());
         $this->assertSame(30, (int) $currentEnd->diffInDays($endsAt, false));
     }
 
     public function test_from_current_end_starts_from_now_when_expired(): void
     {
         $endsAt = TeamTrialSchedule::resolveEndsAt(
-            now()->subDay(),
+            now($this->timezone)->subDay()->endOfDay(),
             TeamTrialSchedule::EXTEND_FROM_CURRENT_END,
             30,
             null,
             [30, 60, 90],
+            $this->timezone,
         );
 
-        $this->assertGreaterThanOrEqual(29, (int) now()->startOfDay()->diffInDays($endsAt->startOfDay(), false));
-        $this->assertLessThanOrEqual(31, (int) now()->startOfDay()->diffInDays($endsAt->startOfDay(), false));
+        $localized = $endsAt->copy()->timezone($this->timezone);
+
+        $this->assertTrue($localized->isEndOfDay());
+        $this->assertGreaterThanOrEqual(29, (int) now($this->timezone)->startOfDay()->diffInDays($localized->startOfDay(), false));
+        $this->assertLessThanOrEqual(31, (int) now($this->timezone)->startOfDay()->diffInDays($localized->startOfDay(), false));
     }
 
-    public function test_custom_date_uses_end_of_day(): void
+    public function test_custom_date_uses_end_of_day_in_team_timezone(): void
     {
-        $date = now()->addDays(14)->toDateString();
+        $date = now($this->timezone)->addDays(14)->toDateString();
 
         $endsAt = TeamTrialSchedule::resolveEndsAt(
             null,
@@ -62,14 +76,16 @@ class TeamTrialScheduleTest extends TestCase
             null,
             $date,
             [30, 60, 90],
+            $this->timezone,
         );
 
-        $this->assertSame($date, $endsAt->toDateString());
-        $this->assertSame(23, $endsAt->hour);
-        $this->assertSame(59, $endsAt->minute);
+        $localized = $endsAt->copy()->timezone($this->timezone);
+
+        $this->assertSame($date, $localized->toDateString());
+        $this->assertTrue($localized->isEndOfDay());
     }
 
-    public function test_rejects_past_custom_date(): void
+    public function test_rejects_past_custom_date_in_team_timezone(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -77,8 +93,9 @@ class TeamTrialScheduleTest extends TestCase
             null,
             TeamTrialSchedule::EXTEND_FROM_TODAY,
             null,
-            now()->subDay()->toDateString(),
+            now($this->timezone)->subDay()->toDateString(),
             [30, 60, 90],
+            $this->timezone,
         );
     }
 }

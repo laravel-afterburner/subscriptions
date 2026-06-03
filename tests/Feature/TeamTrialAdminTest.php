@@ -62,7 +62,10 @@ class TeamTrialAdminTest extends TestCase
     {
         [$user, $team] = $this->createTeamWithUser();
         $user->update(['is_system_admin' => true]);
-        $team->update(['trial_ends_at' => now()->subDay()]);
+        $team->update([
+            'trial_ends_at' => now()->subDay(),
+            'timezone' => 'America/Toronto',
+        ]);
 
         Livewire::actingAs($user)
             ->test(Index::class)
@@ -74,8 +77,11 @@ class TeamTrialAdminTest extends TestCase
 
         $team->refresh();
 
+        $localized = $team->trial_ends_at->timezone('America/Toronto');
+
         $this->assertTrue($team->onGenericTrial());
-        $this->assertGreaterThanOrEqual(59, (int) now()->diffInDays($team->trial_ends_at, false));
+        $this->assertSame('23:59:59', $localized->format('H:i:s'));
+        $this->assertGreaterThanOrEqual(59, (int) now('America/Toronto')->diffInDays($localized, false));
     }
 
     public function test_non_admin_cannot_access_team_trials_livewire(): void

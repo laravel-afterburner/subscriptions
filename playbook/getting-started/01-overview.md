@@ -10,7 +10,7 @@ The Subscriptions package connects your {{ entity_label }} to Stripe billing—p
 
 ## Navigation
 
-Open **Subscriptions** from your {{ entity_label }} menu (between **Financials** and **Help & Support** when those items are visible).
+Open **Subscriptions** from the **System Support** section of your {{ entity_label }} menu (alongside **Help & Support** when both are visible).
 
 ## Who can manage billing
 

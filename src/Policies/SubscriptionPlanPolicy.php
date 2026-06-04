@@ -3,6 +3,7 @@
 namespace Afterburner\Subscriptions\Policies;
 
 use Afterburner\Subscriptions\Models\SubscriptionPlan;
+use Afterburner\Subscriptions\Support\SubscriptionsPermissions;
 use Afterburner\Subscriptions\Support\TeamPermissionGate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +42,7 @@ class SubscriptionPlanPolicy
 
     public function viewBilling(Authenticatable $user, Model $team): bool
     {
-        return TeamPermissionGate::allowsAny($user, ['view_billing', 'manage_billing'], $team);
+        return SubscriptionsPermissions::canAccessModule($user, $team);
     }
 
     protected function isSystemAdmin(Authenticatable $user): bool

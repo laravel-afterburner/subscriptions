@@ -1,4 +1,5 @@
 <div class="space-y-8">
+    @if (in_array('status', $sectionOrder, true))
     <x-action-section>
         <x-slot name="title">Subscription status</x-slot>
         <x-slot name="description">
@@ -8,8 +9,12 @@
             @include('afterburner-subscriptions::subscriptions.livewire.partials.status-panel')
         </x-slot>
     </x-action-section>
+    @endif
 
+    @if (in_array('plans', $sectionOrder, true))
+    @if (in_array('status', $sectionOrder, true))
     <x-section-border />
+    @endif
 
     <x-action-section>
         <x-slot name="title">Available plans</x-slot>
@@ -170,8 +175,12 @@
             </div>
         </x-slot>
     </x-action-section>
+    @endif
 
+    @if (in_array('invoices', $sectionOrder, true))
+    @if (in_array('status', $sectionOrder, true) || in_array('plans', $sectionOrder, true))
     <x-section-border />
+    @endif
 
     <x-action-section>
         <x-slot name="title">Invoices</x-slot>
@@ -274,4 +283,5 @@
             </div>
         </x-slot>
     </x-action-section>
+    @endif
 </div>

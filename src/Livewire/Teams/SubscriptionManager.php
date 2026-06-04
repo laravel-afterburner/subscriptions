@@ -7,8 +7,10 @@ use Afterburner\Subscriptions\Enums\BillingInterval;
 use Afterburner\Subscriptions\Models\SubscriptionPlan;
 use Afterburner\Subscriptions\Models\SubscriptionPromotionCode;
 use Afterburner\Subscriptions\Support\PlanEntitlements;
+use Afterburner\Subscriptions\Support\SubscriptionsPermissions;
 use Afterburner\Subscriptions\Support\SubscriptionStatus;
 use Afterburner\Subscriptions\Support\SubscriptionSummary;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +34,11 @@ class SubscriptionManager extends Component
 
     public function mount(Model $team): void
     {
+        $user = auth()->user();
+
+        abort_unless($user instanceof User && $user->belongsToTeam($team), 403);
+        abort_unless(SubscriptionsPermissions::canAccessModule($user, $team), 403);
+
         $this->team = $team;
     }
 
@@ -67,16 +74,25 @@ class SubscriptionManager extends Component
 
     public function render()
     {
-        $plans = SubscriptionPlan::query()
-            ->where('is_active', true)
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+        $user = auth()->user();
+        $sectionOrder = $user instanceof User
+            ? SubscriptionsPermissions::visibleSections($user, $this->team)
+            : [];
+        $visible = array_flip($sectionOrder);
+        $show = fn (string $section): bool => isset($visible[$section]);
+
+        $plans = $show(SubscriptionsPermissions::SECTION_PLANS)
+            ? SubscriptionPlan::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get()
+            : collect();
 
         $status = SubscriptionStatus::forTeam($this->team);
         $invoices = collect();
 
-        if (method_exists($this->team, 'invoices') && $this->team->stripe_id) {
+        if ($show(SubscriptionsPermissions::SECTION_INVOICES) && method_exists($this->team, 'invoices') && $this->team->stripe_id) {
             try {
                 $invoices = collect($this->team->invoices());
 
@@ -115,6 +131,7 @@ class SubscriptionManager extends Component
         );
 
         return view('afterburner-subscriptions::subscriptions.livewire.manager', [
+            'sectionOrder' => $sectionOrder,
             'plans' => $plans,
             'team' => $this->team,
             'statusLabel' => $status->statusLabel(),

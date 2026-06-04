@@ -13,15 +13,27 @@ class TeamPermissionGate
             return true;
         }
 
+        $teamId = (int) $team->getKey();
+
+        if (class_exists(\App\Support\PermissionCatalog::class) && method_exists($user, 'getAuthIdentifier')) {
+            return \App\Support\PermissionCatalog::allows($user, $teamId, $slug);
+        }
+
         if (! method_exists($user, 'hasPermission')) {
             return false;
         }
 
-        return $user->hasPermission($slug, $team->getKey());
+        return $user->hasPermission($slug, $teamId);
     }
 
     public static function allowsAny(Authenticatable $user, array $slugs, Model $team): bool
     {
+        $teamId = (int) $team->getKey();
+
+        if (class_exists(\App\Support\PermissionCatalog::class) && method_exists($user, 'getAuthIdentifier')) {
+            return \App\Support\PermissionCatalog::allowsAny($user, $teamId, $slugs);
+        }
+
         foreach ($slugs as $slug) {
             if (static::allows($user, $slug, $team)) {
                 return true;

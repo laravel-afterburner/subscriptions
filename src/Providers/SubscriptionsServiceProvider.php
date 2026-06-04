@@ -166,6 +166,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
             TeamNavigation::register([
                 'label' => 'Subscriptions',
                 'route' => 'teams.subscriptions.index',
+                'placement' => 'system-support',
                 'order' => 15,
                 'route_params' => function () {
                     $user = auth()->user();

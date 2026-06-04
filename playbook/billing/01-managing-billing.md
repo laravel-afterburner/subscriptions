@@ -6,7 +6,7 @@ order: 10
 
 ## Overview
 
-{{ entity_label_plural_title }} on a paid plan manage subscription status, payment methods, and invoices through the **Subscriptions** area in the {{ entity_label }} menu.
+{{ entity_label_plural_title }} on a paid plan manage subscription status, payment methods, and invoices through **Subscriptions** in the **System Support** section of the {{ entity_label }} menu.
 
 ## Steps
 

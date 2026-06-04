@@ -10,6 +10,17 @@ use App\Models\Team;
 
 class SubscriptionSummaryTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $helpers = dirname(__DIR__, 2).'/../afterburner/app/helpers.php';
+
+        if (is_file($helpers)) {
+            require_once $helpers;
+        }
+    }
+
     public function test_trial_team_has_trial_badge_and_days_remaining(): void
     {
         [, $team] = $this->createTeamWithUser();
@@ -22,6 +33,13 @@ class SubscriptionSummaryTest extends TestCase
         $this->assertGreaterThanOrEqual(9, $summary->trialDaysRemaining());
         $this->assertLessThanOrEqual(10, $summary->trialDaysRemaining());
         $this->assertStringContainsString('blue', $summary->statusBadgeClasses());
+
+        $trialStat = collect($summary->highlightStats())->firstWhere('label', 'Trial ends');
+
+        $this->assertNotNull($trialStat);
+        $this->assertTrue($trialStat['is_html']);
+        $this->assertStringContainsString('<sup>', $trialStat['value']);
+        $this->assertStringContainsString('remaining', $trialStat['hint']);
     }
 
     public function test_payment_method_label_is_formatted(): void

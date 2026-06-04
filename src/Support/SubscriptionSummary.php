@@ -206,7 +206,8 @@ class SubscriptionSummary
             $daysRemaining = $this->trialDaysRemaining();
             $stats[] = [
                 'label' => 'Trial ends',
-                'value' => $this->formatDate($this->trialEndsAt(), 'M j, Y'),
+                'value' => TeamTrialDisplay::formatTrialEndsAt($this->trialEndsAt(), $this->team),
+                'is_html' => function_exists('format_date_superscript'),
                 'hint' => $daysRemaining !== null
                     ? ($daysRemaining === 0 ? 'Ends today' : $daysRemaining.' day'.($daysRemaining === 1 ? '' : 's').' remaining')
                     : null,

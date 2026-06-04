@@ -45,7 +45,13 @@
             @foreach ($highlightStats as $stat)
                 <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
                     <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{{ $stat['label'] }}</p>
-                    <p class="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100">{{ $stat['value'] }}</p>
+                    <p class="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100">
+                        @if ($stat['is_html'] ?? false)
+                            {!! $stat['value'] !!}
+                        @else
+                            {{ $stat['value'] }}
+                        @endif
+                    </p>
                     @if ($stat['hint'])
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $stat['hint'] }}</p>
                     @endif

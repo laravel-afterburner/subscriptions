@@ -14,7 +14,15 @@ Open **Subscriptions** from the **System Support** section of your {{ entity_lab
 
 ## Who can manage billing
 
-Members with **view billing** permission can open subscription pages for the current {{ entity_label }}. **Manage billing** permission is required to change plans or payment methods.
+Strata and other applications may use bundle or individual billing permissions:
+
+| Permission | Typical access |
+|------------|----------------|
+| **View Billing** | All subscription sections — status, plans, invoices |
+| **View Subscription Status** | Current plan and trial state |
+| **Manage Billing** | Change plans, payment methods, and subscribe |
+
+**Manage billing** permission is required to change plans or update cards. **View billing** is sufficient to review status and download invoices.
 
 System administrators manage subscription plans and promotion codes from the system admin area — separate from {{ entity_label }}-level billing.
 

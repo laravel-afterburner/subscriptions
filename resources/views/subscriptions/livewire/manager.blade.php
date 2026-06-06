@@ -202,7 +202,7 @@
             </div>
 
             <div class="-mx-4 overflow-x-auto sm:-mx-6">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="data-table table-invoices min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">

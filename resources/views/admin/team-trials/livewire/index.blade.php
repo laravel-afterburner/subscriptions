@@ -176,7 +176,7 @@
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Teams with a trial end date in the future.</p>
 
                         <div class="-mx-4 mt-4 overflow-x-auto sm:-mx-6">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <table class="data-table table-team-trials min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-900">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Team</th>

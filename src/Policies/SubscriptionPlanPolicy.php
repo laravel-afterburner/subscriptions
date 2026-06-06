@@ -4,7 +4,7 @@ namespace Afterburner\Subscriptions\Policies;
 
 use Afterburner\Subscriptions\Models\SubscriptionPlan;
 use Afterburner\Subscriptions\Support\SubscriptionsPermissions;
-use Afterburner\Subscriptions\Support\TeamPermissionGate;
+use App\Support\TeamPermissionGate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,7 +37,7 @@ class SubscriptionPlanPolicy
 
     public function manageBilling(Authenticatable $user, Model $team): bool
     {
-        return TeamPermissionGate::allows($user, 'manage_billing', $team);
+        return TeamPermissionGate::allows($user, (int) $team->getKey(), 'manage_billing');
     }
 
     public function viewBilling(Authenticatable $user, Model $team): bool

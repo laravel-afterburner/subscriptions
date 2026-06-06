@@ -3,7 +3,7 @@
 namespace Afterburner\Subscriptions\Tests;
 
 use Afterburner\Subscriptions\Providers\SubscriptionsServiceProvider;
-use Afterburner\Support\Testing\Concerns\ConfiguresAfterburnerEntity;
+use Tests\Concerns\ConfiguresAfterburnerEntity;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,6 +20,8 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        require_once __DIR__.'/Fixtures/entity_helpers.php';
 
         config([
             'afterburner-subscriptions.enabled' => true,

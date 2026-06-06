@@ -1,6 +1,6 @@
 <?php
 
-namespace Afterburner\Subscriptions\Database\Seeders\Concerns;
+namespace App\Database\Seeders\Concerns;
 
 use Illuminate\Support\Facades\DB;
 
@@ -10,7 +10,7 @@ trait AssignsPermissionsToTeamOwners
     {
         if (! DB::getSchemaBuilder()->hasTable('teams') || ! DB::getSchemaBuilder()->hasTable('roles')) {
             if (isset($this->command)) {
-                $this->command->warn('  ⚠ Teams or roles table does not exist. Skipping entity owner permission assignment.');
+                $this->command->warn('  ⚠ Teams or roles table does not exist. Skipping team owner permission assignment.');
             }
 
             return 0;

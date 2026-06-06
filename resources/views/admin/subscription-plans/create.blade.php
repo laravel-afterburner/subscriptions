@@ -1,4 +1,4 @@
-<x-app-layout :title="\Afterburner\Subscriptions\Support\PageHeader::make('Subscription Plans', action: 'Create plan')">
+<x-app-layout :title="\App\Support\PageHeader::make('Subscription Plans', action: 'Create plan')">
     <x-slot name="header">
         <x-afterburner-subscriptions::page-header section="Subscription Plans" action="Create plan" />
     </x-slot>

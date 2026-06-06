@@ -4,6 +4,7 @@ namespace Afterburner\Subscriptions\Support;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Support\TeamPermissionGate;
 
 /**
  * Subscription billing page sections mapped to permission slugs.
@@ -56,7 +57,7 @@ final class SubscriptionsPermissions
 
     public static function canAccessModule(User $user, Team $team): bool
     {
-        return TeamPermissionGate::allowsAny($user, self::moduleAccessSlugs(), $team);
+        return TeamPermissionGate::allowsAny($user, $team->id, self::moduleAccessSlugs());
     }
 
     public static function canViewSection(User $user, Team $team, string $section): bool
@@ -68,13 +69,13 @@ final class SubscriptionsPermissions
         }
 
         if ($section === self::SECTION_PLANS) {
-            return TeamPermissionGate::allowsAny($user, [
+            return TeamPermissionGate::allowsAny($user, $team->id, [
                 $slug,
                 'manage_billing',
-            ], $team);
+            ]);
         }
 
-        return TeamPermissionGate::allows($user, $slug, $team);
+        return TeamPermissionGate::allows($user, $team->id, $slug);
     }
 
     /**

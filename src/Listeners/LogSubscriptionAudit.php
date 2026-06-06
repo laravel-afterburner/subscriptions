@@ -5,7 +5,7 @@ namespace Afterburner\Subscriptions\Listeners;
 use Afterburner\Subscriptions\Events\SubscriptionCancelled;
 use Afterburner\Subscriptions\Events\SubscriptionPaymentFailed;
 use Afterburner\Subscriptions\Events\TeamSubscribed;
-use Afterburner\Support\EntityLabel;
+use App\Support\EntityLabel;
 use App\Support\Audit\AuditLogger;
 
 class LogSubscriptionAudit

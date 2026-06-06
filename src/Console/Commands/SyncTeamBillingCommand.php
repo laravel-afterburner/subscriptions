@@ -3,7 +3,7 @@
 namespace Afterburner\Subscriptions\Console\Commands;
 
 use Afterburner\Subscriptions\Actions\Stripe\SyncCompletedCheckout;
-use Afterburner\Support\EntityLabel;
+use App\Support\EntityLabel;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 

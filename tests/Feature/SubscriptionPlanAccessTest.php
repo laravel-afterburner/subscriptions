@@ -4,7 +4,7 @@ namespace Afterburner\Subscriptions\Tests\Feature;
 
 use Afterburner\Subscriptions\Livewire\Admin\SubscriptionPlans\Show;
 use Afterburner\Subscriptions\Models\SubscriptionPlan;
-use Afterburner\Subscriptions\Support\TeamPermissionGate;
+use App\Support\TeamPermissionGate;
 use Afterburner\Subscriptions\Tests\TestCase;
 use Livewire\Livewire;
 
@@ -74,14 +74,14 @@ class SubscriptionPlanAccessTest extends TestCase
     {
         [$user, $team] = $this->createTeamWithUser([]);
 
-        $this->assertTrue(TeamPermissionGate::allows($user, 'manage_billing', $team));
+        $this->assertTrue(TeamPermissionGate::allows($user, $team->id, 'manage_billing'));
     }
 
     public function test_team_member_with_permission_can_view_billing(): void
     {
         [$user, $team] = $this->createTeamWithUser(['view_billing']);
 
-        $this->assertTrue(TeamPermissionGate::allows($user, 'view_billing', $team));
+        $this->assertTrue(TeamPermissionGate::allows($user, $team->id, 'view_billing'));
     }
 
     public function test_subscription_plan_can_be_created_in_database(): void

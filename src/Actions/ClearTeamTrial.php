@@ -2,7 +2,7 @@
 
 namespace Afterburner\Subscriptions\Actions;
 
-use Afterburner\Support\EntityLabel;
+use App\Support\EntityLabel;
 use App\Support\Audit\AuditLogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;

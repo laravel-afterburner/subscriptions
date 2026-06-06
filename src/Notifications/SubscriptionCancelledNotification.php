@@ -2,7 +2,7 @@
 
 namespace Afterburner\Subscriptions\Notifications;
 
-use Afterburner\Support\EntityLabel;
+use App\Support\EntityLabel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;

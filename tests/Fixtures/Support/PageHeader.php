@@ -1,6 +1,6 @@
 <?php
 
-namespace Afterburner\Subscriptions\Support;
+namespace App\Support;
 
 class PageHeader
 {

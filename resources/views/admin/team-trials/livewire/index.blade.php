@@ -1,8 +1,8 @@
 <div id="team-trials">
     <x-action-section>
-        <x-slot name="title">Team trials</x-slot>
+        <x-slot name="title">{{ entity_plural_title() }} trials</x-slot>
         <x-slot name="description">
-            Grant or extend full app access for a team without a paid subscription by setting <code class="text-xs">trial_ends_at</code>.
+            Grant or extend full app access for a {{ entity_label() }} without a paid subscription by setting <code class="text-xs">trial_ends_at</code>.
         </x-slot>
         <x-slot name="content">
             @if (! $supportsTrials)
@@ -12,7 +12,7 @@
             @else
                 <div class="space-y-8">
                     <div class="rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900/40">
-                        <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100">Find a team</h3>
+                        <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100">Find a {{ entity_label() }}</h3>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Search by name or ID (minimum 2 characters).</p>
 
                         <div class="relative mt-4 max-w-xl">
@@ -22,7 +22,7 @@
                                 type="search"
                                 class="mt-1 block w-full"
                                 wire:model.live.debounce.300ms="teamSearch"
-                                placeholder="Team name or ID"
+                                placeholder="{{ entity_title() }} name or ID"
                                 autocomplete="off"
                             />
                             @if ($teamSearch !== '' && count($searchResults) > 0)
@@ -41,7 +41,7 @@
                                     @endforeach
                                 </ul>
                             @elseif ($teamSearch !== '' && strlen($teamSearch) >= 2)
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No teams found.</p>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No {{ entity_plural() }} found.</p>
                             @endif
                         </div>
 
@@ -50,7 +50,7 @@
                                 <div class="flex flex-wrap items-start justify-between gap-4">
                                     <div>
                                         <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $selectedTeam->name }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Team #{{ $selectedTeam->getKey() }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ entity_title() }} #{{ $selectedTeam->getKey() }}</p>
                                     </div>
                                     @if ($statusLabel)
                                         <span @class([
@@ -83,7 +83,7 @@
 
                                 @if ($hasPaidSubscription)
                                     <p class="mt-4 text-sm text-amber-700 dark:text-amber-300">
-                                        This team has an active Stripe subscription. Generic trial may be cleared when Stripe syncs; use Stripe for comping paying customers.
+                                        This {{ entity_label() }} has an active Stripe subscription. Generic trial may be cleared when Stripe syncs; use Stripe for comping paying customers.
                                     </p>
                                 @endif
                             </div>
@@ -121,7 +121,7 @@
                                             <x-label for="customEndsAt" value="End date" />
                                             <x-input id="customEndsAt" type="date" class="mt-1 block w-full" wire:model="customEndsAt" min="{{ $minCustomTrialDate }}" />
                                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                                Trial ends at end of day in the team's timezone ({{ \Afterburner\Subscriptions\Support\TeamTrialDisplay::teamTimezone($selectedTeam) }}).
+                                                Trial ends at end of day in the {{ entity_label() }}'s timezone ({{ \Afterburner\Subscriptions\Support\TeamTrialDisplay::teamTimezone($selectedTeam) }}).
                                             </p>
                                             <x-input-error for="customEndsAt" class="mt-2" />
                                         </div>
@@ -159,7 +159,7 @@
                                         <x-danger-button
                                             type="button"
                                             wire:click="clearTrial"
-                                            wire:confirm="End this team's trial now? They may lose app access if they have no paid subscription."
+                                            wire:confirm="End this {{ entity_label() }}'s trial now? They may lose app access if they have no paid subscription."
                                             wire:loading.attr="disabled"
                                             wire:target="clearTrial"
                                         >
@@ -173,13 +173,13 @@
 
                     <div>
                         <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100">Active trials</h3>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Teams with a trial end date in the future.</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ entity_plural_title() }} with a trial end date in the future.</p>
 
                         <div class="-mx-4 mt-4 overflow-x-auto sm:-mx-6">
                             <table class="data-table table-team-trials min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-900">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Team</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ entity_title() }}</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Trial ends</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Days left</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>

@@ -2,6 +2,7 @@
 
 namespace Afterburner\Subscriptions\Actions;
 
+use Afterburner\Support\EntityLabel;
 use App\Support\Audit\AuditLogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class ClearTeamTrial
             category: 'billing',
             eventName: 'team_trial.cleared',
             auditable: $team,
-            changes: AuditLogger::changesWithSummary('Team trial ended.', context: [
+            changes: AuditLogger::changesWithSummary(EntityLabel::singularTitle().' trial ended.', context: [
                 'trial_ends_at' => [
                     'old' => $previous?->toIso8601String(),
                     'new' => null,

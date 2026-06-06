@@ -5,6 +5,7 @@ namespace Afterburner\Subscriptions\Listeners;
 use Afterburner\Subscriptions\Events\SubscriptionCancelled;
 use Afterburner\Subscriptions\Events\SubscriptionPaymentFailed;
 use Afterburner\Subscriptions\Events\TeamSubscribed;
+use Afterburner\Support\EntityLabel;
 use App\Support\Audit\AuditLogger;
 
 class LogSubscriptionAudit
@@ -59,8 +60,8 @@ class LogSubscriptionAudit
             'subscription.payment_failed' => 'Subscription payment failed.',
             'subscription.cancelled' => 'Subscription cancelled.',
             'subscription.subscribed' => isset($context['plan_name'])
-                ? "Team subscribed to {$context['plan_name']}."
-                : 'Team subscribed to a plan.',
+                ? EntityLabel::singularTitle()." subscribed to {$context['plan_name']}."
+                : EntityLabel::singularTitle().' subscribed to a plan.',
             default => $eventName,
         };
 

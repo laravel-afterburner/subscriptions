@@ -3,7 +3,7 @@
     <x-action-section>
         <x-slot name="title">Subscription status</x-slot>
         <x-slot name="description">
-            Your {{ config('afterburner.entity_label', 'team') }}'s current plan, trial period, and entitlements. Billing managers can update the payment method in Stripe.
+            Your {{ entity_label() }}'s current plan, trial period, and entitlements. Billing managers can update the payment method in Stripe.
         </x-slot>
         <x-slot name="content">
             @include('afterburner-subscriptions::subscriptions.livewire.partials.status-panel')
@@ -19,7 +19,7 @@
     <x-action-section>
         <x-slot name="title">Available plans</x-slot>
         <x-slot name="description">
-            Choose a billing interval to subscribe or change your {{ config('afterburner.entity_label', 'team') }}'s plan.
+            Choose a billing interval to subscribe or change your {{ entity_label() }}'s plan.
             @if ($canManage && $promotionsEnabled && $hasActivePromotionCodes)
                 Add an optional promotion code before checkout.
             @endif
@@ -133,7 +133,7 @@
                                         <svg class="h-4 w-4 shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
-                                        Up to {{ $maxUsers }} {{ config('afterburner.entity_label', 'team') }} members
+                                        Up to {{ $maxUsers }} {{ entity_label() }} members
                                     </li>
                                 @endif
                                 @if ($maxStorage)

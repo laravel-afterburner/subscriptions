@@ -8,6 +8,7 @@ use Afterburner\Subscriptions\Models\SubscriptionPlan;
 use App\Models\Team;
 use Illuminate\Support\Facades\Route;
 
+
 Route::post('/stripe/webhook', [WebhookController::class, 'handleWebhook'])
     ->name('stripe.webhook');
 
@@ -16,11 +17,11 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
         return;
     }
 
-    Route::get('/teams/{team}/subscriptions', TeamSubscriptionsController::class)
+    Route::get('/' . entity_url_slug() . '/{team}/subscriptions', TeamSubscriptionsController::class)
         ->middleware('can:viewBilling,team')
         ->name('teams.subscriptions.index');
 
-    Route::get('/teams/{team}/subscriptions/billing-portal', function (Team $team) {
+    Route::get('/' . entity_url_slug() . '/{team}/subscriptions/billing-portal', function (Team $team) {
         abort_unless(auth()->user()?->can('manageBilling', $team), 403);
 
         return $team->redirectToBillingPortal(route('teams.subscriptions.index', $team));

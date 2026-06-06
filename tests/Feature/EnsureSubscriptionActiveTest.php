@@ -46,8 +46,8 @@ class EnsureSubscriptionActiveTest extends TestCase
         $user->update(['current_team_id' => $team->id]);
         $team->update(['trial_ends_at' => now()->subDay()]);
 
-        $route = Route::get('/teams/{team}/subscriptions', fn () => 'ok')->name('teams.subscriptions.index');
-        $request = Request::create("/teams/{$team->id}/subscriptions", 'GET');
+        $route = Route::get(entity_path('{team}/subscriptions'), fn () => 'ok')->name('teams.subscriptions.index');
+        $request = Request::create(entity_path("{$team->id}/subscriptions"), 'GET');
         $request->setUserResolver(fn () => $user);
         $request->setRouteResolver(fn () => $route->bind($request));
 

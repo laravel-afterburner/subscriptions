@@ -3,6 +3,7 @@
 namespace Afterburner\Subscriptions\Tests;
 
 use Afterburner\Subscriptions\Providers\SubscriptionsServiceProvider;
+use Afterburner\Support\Testing\Concerns\ConfiguresAfterburnerEntity;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,6 +14,7 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    use ConfiguresAfterburnerEntity;
     use RefreshDatabase;
 
     protected function setUp(): void
@@ -47,6 +49,8 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineEnvironment($app): void
     {
+        static::applyAfterburnerEntityConfig($app);
+
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [

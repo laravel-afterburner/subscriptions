@@ -1,11 +1,12 @@
 {
     "name": "laravel-afterburner/subscriptions",
     "description": "Stripe subscription billing for Afterburner applications",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "laravel-afterburner/support": "^1.0",
         "laravel/cashier": "^15.0",
         "laravel/framework": "^11.0",
         "laravel-afterburner/jetstream": "^1.0|dev-master",

@@ -2,6 +2,7 @@
 
 namespace Afterburner\Subscriptions\Notifications;
 
+use Afterburner\Support\EntityLabel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ class SubscriptionCancelledNotification extends Notification implements ShouldQu
 
     public function toMail(object $notifiable): MailMessage
     {
-        $entityName = $this->team->name ?? 'your '.config('afterburner.entity_label', 'team');
+        $entityName = $this->team->name ?? 'your '.EntityLabel::singular();
         $subscriptionsUrl = route('teams.subscriptions.index', $this->team);
 
         return team_mail_message($this->team)

@@ -2,6 +2,7 @@
 
 namespace Afterburner\Subscriptions\Actions;
 
+use Afterburner\Support\EntityLabel;
 use App\Support\Audit\AuditLogger;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ class SetTeamTrial
             'trial_ends_at' => $endsAt->copy()->utc(),
         ])->save();
 
-        $this->logChange($team, $previous, $endsAt, 'Team trial updated.');
+        $this->logChange($team, $previous, $endsAt, EntityLabel::singularTitle().' trial updated.');
     }
 
     protected function logChange(Model $team, mixed $previous, CarbonInterface $new, string $summary): void

@@ -101,7 +101,7 @@ class TeamTrialAdminTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(Index::class)
-            ->assertSee('Team trials')
+            ->assertSee(entity_plural_title().' trials')
             ->assertSee('Active trials')
             ->assertSee($team->name);
     }

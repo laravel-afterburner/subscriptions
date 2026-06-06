@@ -3,6 +3,7 @@
 namespace Afterburner\Subscriptions\Console\Commands;
 
 use Afterburner\Subscriptions\Actions\Stripe\SyncCompletedCheckout;
+use Afterburner\Support\EntityLabel;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,7 +23,7 @@ class SyncTeamBillingCommand extends Command
         $team = $teamModel::query()->find($this->argument('team'));
 
         if (! $team) {
-            $this->components->error('Team not found.');
+            $this->components->error(EntityLabel::singularTitle().' not found.');
 
             return self::FAILURE;
         }

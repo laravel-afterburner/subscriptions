@@ -22,11 +22,13 @@ class InstallCommand extends Command
             '--force' => true,
         ]);
 
-        $this->info('Publishing views...');
-        $this->call('vendor:publish', [
-            '--tag' => 'afterburner-subscriptions-assets',
-            '--force' => true,
-        ]);
+        if ($this->confirm('Publish views so you can customize them? Published views override the package and will not pick up later package view updates.', false)) {
+            $this->info('Publishing views...');
+            $this->call('vendor:publish', [
+                '--tag' => 'afterburner-subscriptions-assets',
+                '--force' => true,
+            ]);
+        }
 
         if ($this->confirm('Publish Cashier migrations?', false)) {
             $this->warn('Skipping default Cashier migrations — this package ships entity-scoped subscription tables.');

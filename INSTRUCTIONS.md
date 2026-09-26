@@ -325,7 +325,7 @@ Implement `afterburner:subscriptions:notify-trial-ending` scheduled daily in ser
 `php artisan afterburner:subscriptions:install`:
 
 1. Publish config (`afterburner-subscriptions-config`)
-2. Publish views (`afterburner-subscriptions-assets`)
+2. Ask before publishing views (`afterburner-subscriptions-assets`). Default is no, so package views keep rendering from the package. Published copies override the package and go stale.
 3. Publish Cashier migrations (`cashier-migrations`)
 4. Append env vars to `.env` / `.env.example`
 5. Prompt migrate
